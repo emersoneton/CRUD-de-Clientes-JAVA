@@ -20,6 +20,8 @@ public class FormClientes extends javax.swing.JFrame {
      */
     public FormClientes() {
         initComponents();
+        setResizable(false);//Não permite editar o tamanho
+        this.setLocationRelativeTo(null);//Centralizar Jframe
     }
 
     /**
@@ -73,7 +75,7 @@ public class FormClientes extends javax.swing.JFrame {
         btnCancelar = new javax.swing.JButton();
         btnExcluir = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Cadastro de Clientes");
 
         jPanel2.setBackground(new java.awt.Color(153, 153, 153));
@@ -153,11 +155,10 @@ public class FormClientes extends javax.swing.JFrame {
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane1)
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGap(55, 55, 55)
+                        .addComponent(jLabel11)
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel5Layout.createSequentialGroup()
-                                .addComponent(txtCidade, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(44, 44, 44)
+                                .addGap(237, 237, 237)
                                 .addComponent(jLabel6)
                                 .addGap(18, 18, 18)
                                 .addComponent(txtBairro, javax.swing.GroupLayout.PREFERRED_SIZE, 172, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -166,8 +167,7 @@ public class FormClientes extends javax.swing.JFrame {
                                 .addGap(18, 18, 18)
                                 .addComponent(comboboxSexo, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(jPanel5Layout.createSequentialGroup()
-                                .addComponent(txtDdd, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(52, 52, 52)
+                                .addGap(133, 133, 133)
                                 .addComponent(jLabel12)
                                 .addGap(18, 18, 18)
                                 .addComponent(txtTelefone, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -178,19 +178,20 @@ public class FormClientes extends javax.swing.JFrame {
                                 .addGap(18, 18, 18)
                                 .addComponent(btnInserir))))
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel5Layout.createSequentialGroup()
+                                .addComponent(jLabel2)
+                                .addGap(18, 18, 18))
                             .addGroup(jPanel5Layout.createSequentialGroup()
                                 .addComponent(jLabel7)
-                                .addGap(32, 32, 32)
-                                .addComponent(txtCpf, javax.swing.GroupLayout.PREFERRED_SIZE, 122, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(jPanel5Layout.createSequentialGroup()
-                                .addComponent(jLabel2)
-                                .addGap(18, 18, 18)
-                                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel5Layout.createSequentialGroup()
-                                        .addGap(91, 91, 91)
-                                        .addComponent(jLabel3))
-                                    .addComponent(txtCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addGap(32, 32, 32)))
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addComponent(txtCpf)
+                            .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(jPanel5Layout.createSequentialGroup()
+                                    .addGap(91, 91, 91)
+                                    .addComponent(jLabel3))
+                                .addComponent(txtCodigo, javax.swing.GroupLayout.PREFERRED_SIZE, 56, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtNome)
@@ -200,11 +201,6 @@ public class FormClientes extends javax.swing.JFrame {
                                 .addGap(18, 18, 18)
                                 .addComponent(txtEndereco, javax.swing.GroupLayout.PREFERRED_SIZE, 458, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(jPanel5Layout.createSequentialGroup()
-                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel5)
-                            .addComponent(jLabel11))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(jPanel5Layout.createSequentialGroup()
                         .addComponent(jLabel9)
                         .addGap(18, 18, 18)
                         .addComponent(txtLimiteDeCredito, javax.swing.GroupLayout.PREFERRED_SIZE, 102, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -212,7 +208,14 @@ public class FormClientes extends javax.swing.JFrame {
                         .addComponent(jLabel10)
                         .addGap(18, 18, 18)
                         .addComponent(txtValorGasto, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(309, 309, 309)))
+                        .addGap(309, 309, 309))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addComponent(jLabel5)
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtDdd, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtCidade, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel5Layout.setVerticalGroup(
@@ -305,6 +308,11 @@ public class FormClientes extends javax.swing.JFrame {
 
         btnSair.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/sair.png"))); // NOI18N
         btnSair.setText("SAIR");
+        btnSair.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSairActionPerformed(evt);
+            }
+        });
 
         btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/cancelar.png"))); // NOI18N
         btnCancelar.setText("CANCELAR");
@@ -397,19 +405,25 @@ public class FormClientes extends javax.swing.JFrame {
         cli.setCidade(txtCidade.getText());
         cli.setBairro(txtBairro.getText());
         
+        // Selecionando qual tipo de ComboBOX foi informado
         if(comboboxSexo.getSelectedItem() == "Masculino"){
-            cli.setSexo(0);
+            cli.setSexo("01");
         }else if(comboboxSexo.getSelectedItem() == "Feminino"){
-            cli.setSexo(1);
+            cli.setSexo("10");
         }
 
         cli.setLimiteCredito(Double.parseDouble(txtLimiteDeCredito.getText()));
         cli.setValorGasto(Double.parseDouble(txtValorGasto.getText()));
         
+        //Instancia da Modal ClientesDAO
         ClientesDAO cliDao = new ClientesDAO();
         cliDao.Salvar(cli);
              
     }//GEN-LAST:event_btnSalvarActionPerformed
+
+    private void btnSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSairActionPerformed
+        dispose();
+    }//GEN-LAST:event_btnSairActionPerformed
 
     /**
      * @param args the command line arguments

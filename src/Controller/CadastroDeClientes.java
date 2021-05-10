@@ -11,8 +11,8 @@ package Controller;
  */
 public class CadastroDeClientes {
     
+    
     private int codigo,
-                sexo,
                 codigoArea; // DDD
     
     private String nome,
@@ -21,11 +21,14 @@ public class CadastroDeClientes {
                     bairro,
                     cpf,
                     telefone,
-                    observacao;
+                    observacao,
+                    sexo;
     
-    private double limiteCredito,
+    private double limiteCredito = 0,
                     valorGasto;
 
+    
+    // GET and Setters
     public int getCodigo() {
         return codigo;
     }
@@ -114,15 +117,14 @@ public class CadastroDeClientes {
         this.observacao = observacao;
     }
 
-    public int getSexo() {
+    public String getSexo() {
         return sexo;
     }
 
-    public void setSexo(int sexo) {
+    public void setSexo(String sexo) {
         this.sexo = sexo;
     }
 
-   
     
     
 }
