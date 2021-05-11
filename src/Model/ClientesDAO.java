@@ -8,7 +8,10 @@ package Model;
 import Controller.CadastroDeClientes;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -55,17 +58,18 @@ public class ClientesDAO {
             salvar.execute();
 
             JOptionPane.showMessageDialog(null, "CADASTRO DE CLIENTE SALVO COM SUCESSO!");
-            
+
             //Fecha a conexão com o BD
             con.close();
 
         } catch (SQLException ex) {
             Logger.getLogger(ClientesDAO.class.getName()).log(Level.SEVERE, null, ex);
-            JOptionPane.showMessageDialog(null, "Erro ao salvar"+ex);
+            JOptionPane.showMessageDialog(null, "Erro ao salvar" + ex);
         }
 
     }
 
+    // Salva os Telefones na tabela de ClienteTelefones do BD
     public void SalvarTelefones(CadastroDeClientes cli) {
 
         Conexao();
@@ -74,23 +78,87 @@ public class ClientesDAO {
             PreparedStatement salvar = con.prepareStatement("INSERT INTO clientetelefones(CodCliente,CodigoArea,Telefone,Observacao) VALUES(?,?,?,?)");
 
             for (int x = 0; x <= cli.getContador(); x++) {
-                
-                salvar.setString(1, ""+cli.getCodigo());
-                salvar.setString(2, ""+cli.getCodigoArea());
+
+                salvar.setString(1, "" + cli.getCodigo());
+                salvar.setString(2, "" + cli.getCodigoArea());
                 salvar.setString(3, cli.getTelefone());
                 salvar.setString(4, cli.getObservacao());
-                
+
                 salvar.execute();
-                
+
             }
 
             con.close();
-            
+
         } catch (SQLException ex) {
             Logger.getLogger(ClientesDAO.class.getName()).log(Level.SEVERE, null, ex);
-            JOptionPane.showMessageDialog(null, "Erro ao salvar"+ex);
+            JOptionPane.showMessageDialog(null, "Erro ao salvar" + ex);
         }
 
+    }
+
+    //BUSCA DO CLIENTE
+    public void BuscarCliente(CadastroDeClientes cli) {
+
+        Conexao();
+
+        boolean validar = false;
+
+        try {
+            PreparedStatement buscar = con.prepareStatement("SELECT *, BINARY(Sexo) AS SexoBIT FROM clientes WHERE CodCliente = " + cli.getCodigo() + "");
+
+            ResultSet rs = buscar.executeQuery();
+
+            while (rs.next()) {
+
+                cli.setNome(rs.getString("Nome"));
+                cli.setEndereco(rs.getString("Endereco"));
+                cli.setCidade(rs.getString("Cidade"));
+                cli.setBairro(rs.getString("Bairro"));
+                cli.setCpf(rs.getString("Cpf"));
+                cli.setLimiteCredito(Double.parseDouble(rs.getString("LimiteCredito")));
+                cli.setValorGasto(Double.parseDouble(rs.getString("ValorGastos")));
+                cli.setSexo(rs.getString("Sexo"));
+                System.out.println(rs.getString("Sexo"));
+
+                validar = true;
+
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(ClientesDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
+    //BUSCA LISTA DE TELEFONES DO CLIENTE SELECIONADO
+    public List<CadastroDeClientes> BuscarTelefoneDeCliente(CadastroDeClientes cli) {
+
+        Conexao();
+
+        List<CadastroDeClientes> lista = new ArrayList<>();
+        
+        try {
+            PreparedStatement buscar = con.prepareStatement("SELECT * FROM clientetelefones WHERE CodCliente = " + cli.getCodigo() + "");
+            
+            ResultSet rs = buscar.executeQuery();
+            
+            while(rs.next()){
+                CadastroDeClientes cli1 = new CadastroDeClientes();
+                
+                cli1.setCodigoArea(Integer.parseInt(rs.getString("CodigoArea")));
+                cli1.setTelefone(rs.getString("Telefone"));
+                cli1.setObservacao(rs.getString("Observacao"));
+                
+                lista.add(cli1);
+            }
+            
+
+        } catch (SQLException ex) {
+            Logger.getLogger(ClientesDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return lista;
     }
 
 }

@@ -14,7 +14,7 @@ public class CadastroDeClientes {
     
     private int codigo,
                 codigoArea, // DDD
-                contador;
+                contador;   // Testar se a tabela está vazia
     
     private String nome,
                     endereco,

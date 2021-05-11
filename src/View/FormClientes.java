@@ -8,6 +8,7 @@ package View;
 import Controller.CadastroDeClientes;
 import Model.ClientesDAO;
 import Tabelas.TableModelClientes;
+import java.util.List;
 
 /**
  *
@@ -477,7 +478,7 @@ public class FormClientes extends javax.swing.JFrame {
         //Instancia da Modal ClientesDAO
         ClientesDAO cliDao = new ClientesDAO();
         cliDao.Salvar(cli);
-        
+
         Cancelar();
 
     }//GEN-LAST:event_btnSalvarActionPerformed
@@ -527,9 +528,37 @@ public class FormClientes extends javax.swing.JFrame {
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
 
         CadastroDeClientes cli = new CadastroDeClientes();
-
         cli.setCodigo(Integer.parseInt(txtCodigo.getText()));
 
+        ClientesDAO cliDao = new ClientesDAO();
+        cliDao.BuscarCliente(cli);
+
+        txtBairro.setText(cli.getBairro());
+        txtCidade.setText(cli.getCidade());
+        txtCpf.setText(cli.getCpf());
+        txtEndereco.setText(cli.getEndereco());
+        txtLimiteDeCredito.setText(String.valueOf(cli.getLimiteCredito()));
+        txtNome.setText(cli.getNome());
+        txtValorGasto.setText(String.valueOf(cli.getValorGasto()));
+
+        //Seleciona qual sexo que foi salvo no cadastro de clientes
+        String sexo = cli.getSexo();
+        if (sexo.trim().equals("1")) {
+            comboboxSexo.setSelectedItem("Masculino");
+        } else if (sexo.trim().equals("2")) {
+            comboboxSexo.setSelectedItem("Feminino");
+        }
+
+        List<CadastroDeClientes> lista = cliDao.BuscarTelefoneDeCliente(cli);
+        for (int x = 0; x < lista.size(); x++) {
+            CadastroDeClientes cli1 = new CadastroDeClientes();
+            
+            cli1.setCodigoArea(lista.get(x).getCodigoArea());
+            cli1.setTelefone(lista.get(x).getTelefone());
+            cli1.setObservacao(lista.get(x).getObservacao());
+            
+            tabelaInsereTelefone.addRow(cli1);
+        }
 
     }//GEN-LAST:event_btnBuscarActionPerformed
 
@@ -566,8 +595,9 @@ public class FormClientes extends javax.swing.JFrame {
         cli.setTelefone(txtTelefone.getText());
         cli.setObservacao(txtObservacao.getText());
 
+        // Adiciona os 3 dados na tabela de Telefones conforme o Metodo addRow da tabela abstrata
         tabelaInsereTelefone.addRow(cli);
-        
+
         // Limpa os campos de DDD, telefone e observação e seta o mouse na posição de DDD se caso o usuario queira inserir mais telefones
         txtCodigoArea.setText("");
         txtTelefone.setText("");
