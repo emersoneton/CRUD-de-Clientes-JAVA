@@ -7,7 +7,7 @@ package View;
 
 import Controller.CadastroDeClientes;
 import Model.ClientesDAO;
-import com.sun.security.ntlm.Client;
+import Tabelas.TableModelClientes;
 
 /**
  *
@@ -15,13 +15,14 @@ import com.sun.security.ntlm.Client;
  */
 public class FormClientes extends javax.swing.JFrame {
 
-    /**
-     * Creates new form FormClientes
-     */
+    //INSTANCIA DA CLASSE DE TABELA ABSTRATA DO CLIENTE
+    TableModelClientes tabelaInsereTelefone = new TableModelClientes();
+
     public FormClientes() {
         initComponents();
         setResizable(false);//Não permite editar o tamanho
         this.setLocationRelativeTo(null);//Centralizar Jframe
+        tabelaTelefones.setModel(tabelaInsereTelefone); // SETA E INICIALIZA A TABELA ABSTRATA COM AS COLUNAS E O VINCULO DA TABELA
     }
 
     /**
@@ -55,7 +56,7 @@ public class FormClientes extends javax.swing.JFrame {
         jLabel8 = new javax.swing.JLabel();
         comboboxSexo = new javax.swing.JComboBox<>();
         jLabel11 = new javax.swing.JLabel();
-        txtDdd = new javax.swing.JTextField();
+        txtCodigoArea = new javax.swing.JTextField();
         jLabel12 = new javax.swing.JLabel();
         txtTelefone = new javax.swing.JTextField();
         jLabel13 = new javax.swing.JLabel();
@@ -66,6 +67,8 @@ public class FormClientes extends javax.swing.JFrame {
         jLabel10 = new javax.swing.JLabel();
         txtLimiteDeCredito = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
+        btnRemover = new javax.swing.JButton();
+        btnEditar = new javax.swing.JButton();
         jPanel4 = new javax.swing.JPanel();
         jPanel6 = new javax.swing.JPanel();
         btnSalvar = new javax.swing.JButton();
@@ -128,6 +131,11 @@ public class FormClientes extends javax.swing.JFrame {
         jLabel13.setText("Observação:");
 
         btnInserir.setText("Inserir");
+        btnInserir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnInserirActionPerformed(evt);
+            }
+        });
 
         tabelaTelefones.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -145,6 +153,20 @@ public class FormClientes extends javax.swing.JFrame {
         jLabel10.setText("Valor Gasto:");
 
         jLabel9.setText("Limite de Crédito:");
+
+        btnRemover.setText("Excluir");
+        btnRemover.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRemoverActionPerformed(evt);
+            }
+        });
+
+        btnEditar.setText("Alterar");
+        btnEditar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditarActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
@@ -208,12 +230,15 @@ public class FormClientes extends javax.swing.JFrame {
                         .addComponent(jLabel10)
                         .addGap(18, 18, 18)
                         .addComponent(txtValorGasto, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(309, 309, 309))
+                        .addGap(138, 138, 138)
+                        .addComponent(btnEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btnRemover, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addComponent(jLabel5)
                         .addGap(18, 18, 18)
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(txtDdd, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtCodigoArea, javax.swing.GroupLayout.PREFERRED_SIZE, 51, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(txtCidade, javax.swing.GroupLayout.PREFERRED_SIZE, 163, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
@@ -243,7 +268,7 @@ public class FormClientes extends javax.swing.JFrame {
                     .addComponent(txtBairro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtDdd, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtCodigoArea, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel11)
                     .addComponent(jLabel12)
                     .addComponent(txtTelefone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -252,12 +277,19 @@ public class FormClientes extends javax.swing.JFrame {
                     .addComponent(btnInserir))
                 .addGap(18, 18, 18)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtLimiteDeCredito, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel9)
-                    .addComponent(jLabel10)
-                    .addComponent(txtValorGasto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtLimiteDeCredito, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel9)
+                            .addComponent(jLabel10)
+                            .addComponent(txtValorGasto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel5Layout.createSequentialGroup()
+                        .addGap(3, 3, 3)
+                        .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnRemover)
+                            .addComponent(btnEditar))))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -302,6 +334,11 @@ public class FormClientes extends javax.swing.JFrame {
 
         btnBuscar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/buscar.png"))); // NOI18N
         btnBuscar.setText("BUSCAR");
+        btnBuscar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarActionPerformed(evt);
+            }
+        });
 
         btnAlterar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/editar.png"))); // NOI18N
         btnAlterar.setText("ALTERAR");
@@ -316,6 +353,11 @@ public class FormClientes extends javax.swing.JFrame {
 
         btnCancelar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/cancelar.png"))); // NOI18N
         btnCancelar.setText("CANCELAR");
+        btnCancelar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCancelarActionPerformed(evt);
+            }
+        });
 
         btnExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/deletar.png"))); // NOI18N
         btnExcluir.setText("Excluir");
@@ -393,37 +435,146 @@ public class FormClientes extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    //BOTÃO SALVAR CADASTRO DE CLIENTE
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
-        
+
         // Instaciando a classe Cadastro de clientes
         CadastroDeClientes cli = new CadastroDeClientes();
-        
+
         cli.setCodigo(Integer.parseInt(txtCodigo.getText()));
         cli.setNome(txtNome.getText());
         cli.setCpf(txtCpf.getText());
         cli.setEndereco(txtEndereco.getText());
         cli.setCidade(txtCidade.getText());
         cli.setBairro(txtBairro.getText());
-        
-        // Selecionando qual tipo de ComboBOX foi informado
-        if(comboboxSexo.getSelectedItem() == "Masculino"){
-            cli.setSexo("01");
-        }else if(comboboxSexo.getSelectedItem() == "Feminino"){
-            cli.setSexo("10");
+
+        // Selecionando qual tipo de ComboBOX foi informado e envia para salvar as informações
+        if (comboboxSexo.getSelectedItem() == "Masculino") {
+            cli.setSexo("01"); // em binário 01 significa 1
+        } else if (comboboxSexo.getSelectedItem() == "Feminino") {
+            cli.setSexo("10"); // em binário 10 significa 2
         }
 
         cli.setLimiteCredito(Double.parseDouble(txtLimiteDeCredito.getText()));
         cli.setValorGasto(Double.parseDouble(txtValorGasto.getText()));
-        
+
+        int cont = tabelaTelefones.getRowCount();
+        cli.setContador(cont); // Crio um Contador para receber o valor da Tabela para validar na Classe de DAO
+
+        // VALIDO QUANTAS PASSADAS NO FOR ELE TERÁ QUE DAR E INSERIR AS INFORMAÇÕES NO BD ATRAVES DA CLASSE DAO
+        for (int x = 0; x < cont; x++) {
+            CadastroDeClientes cli1 = new CadastroDeClientes();
+
+            cli1.setCodigo(Integer.parseInt(txtCodigo.getText()));
+            cli1.setCodigoArea(Integer.parseInt(tabelaInsereTelefone.getValueAt(x, 0).toString()));
+            cli1.setTelefone(tabelaInsereTelefone.getValueAt(x, 1).toString());
+            cli1.setObservacao(tabelaInsereTelefone.getValueAt(x, 2).toString());
+
+            ClientesDAO cliDao = new ClientesDAO();
+            cliDao.SalvarTelefones(cli1);
+        }
+
         //Instancia da Modal ClientesDAO
         ClientesDAO cliDao = new ClientesDAO();
         cliDao.Salvar(cli);
-             
+        
+        Cancelar();
+
     }//GEN-LAST:event_btnSalvarActionPerformed
 
+    //BOTÃO DE SAIR DO FORM (CADASTRO DE CLIENTE)
     private void btnSairActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSairActionPerformed
         dispose();
     }//GEN-LAST:event_btnSairActionPerformed
+
+    //BOTÃO DE INSERIR DADOS DE TELEFONE NA TEBELA DE TELEFONES
+    private void btnInserirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInserirActionPerformed
+
+        InsereTelefonesNaTabela();
+
+    }//GEN-LAST:event_btnInserirActionPerformed
+
+    //BOTÃO CANCELAR TUDO
+    private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
+
+        Cancelar();
+
+    }//GEN-LAST:event_btnCancelarActionPerformed
+
+    // BOTÃO ALTERAR ITENS DA TABELA DE TELEFONES
+    private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
+
+        if (tabelaTelefones.getSelectedRow() != -1) { // Se for diferente de -1 existe algo na tabela.
+            //Altera a linha e coluna que o usuario clicou quando prescionou o botão de Alterar
+            tabelaInsereTelefone.setValueAt(txtCodigoArea.getText(), tabelaTelefones.getSelectedRow(), 0);
+            tabelaInsereTelefone.setValueAt(txtTelefone.getText(), tabelaTelefones.getSelectedRow(), 1);
+            tabelaInsereTelefone.setValueAt(txtObservacao.getText(), tabelaTelefones.getSelectedRow(), 2);
+        }
+
+    }//GEN-LAST:event_btnEditarActionPerformed
+
+    // BOTÃO REMOVER ITENS DA TABELA DE TELEFONES
+    private void btnRemoverActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemoverActionPerformed
+
+        if (tabelaTelefones.getSelectedRow() != -1) { // Se for diferente de -1 existe algo na tabela.
+
+            tabelaInsereTelefone.removeRow(tabelaTelefones.getSelectedRow()); //Exclui a linha que o usuário selecionou e prescionou o botão de excluir
+
+        }
+
+    }//GEN-LAST:event_btnRemoverActionPerformed
+
+    private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
+
+        CadastroDeClientes cli = new CadastroDeClientes();
+
+        cli.setCodigo(Integer.parseInt(txtCodigo.getText()));
+
+
+    }//GEN-LAST:event_btnBuscarActionPerformed
+
+    //METODO CANCELAR DO BOTÃO CANCELAR TUDO
+    private void Cancelar() {
+
+        txtBairro.setText("");
+        txtCidade.setText("");
+        txtCodigo.setText("");
+        txtCodigoArea.setText("");
+        txtCpf.setText("");
+        txtEndereco.setText("");
+        txtLimiteDeCredito.setText("");
+        txtNome.setText("");
+        txtObservacao.setText("");
+        txtTelefone.setText("");
+        txtValorGasto.setText("");
+        comboboxSexo.setSelectedItem("Masculino");
+
+        int contadorTabelaTelefone = tabelaInsereTelefone.getRowCount();
+
+        for (int x = 0; x < contadorTabelaTelefone; x++) {
+            tabelaInsereTelefone.removeRow(0);
+        }
+
+    }
+
+    //METODO INSERIR TELEFONES NA TEBELA DE TELEFONES
+    private void InsereTelefonesNaTabela() {
+
+        CadastroDeClientes cli = new CadastroDeClientes();
+
+        cli.setCodigoArea(Integer.parseInt(txtCodigoArea.getText()));
+        cli.setTelefone(txtTelefone.getText());
+        cli.setObservacao(txtObservacao.getText());
+
+        tabelaInsereTelefone.addRow(cli);
+        
+        // Limpa os campos de DDD, telefone e observação e seta o mouse na posição de DDD se caso o usuario queira inserir mais telefones
+        txtCodigoArea.setText("");
+        txtTelefone.setText("");
+        txtObservacao.setText("");
+        txtCodigoArea.requestFocus();
+
+    }
 
     /**
      * @param args the command line arguments
@@ -464,8 +615,10 @@ public class FormClientes extends javax.swing.JFrame {
     private javax.swing.JButton btnAlterar;
     private javax.swing.JButton btnBuscar;
     private javax.swing.JButton btnCancelar;
+    private javax.swing.JButton btnEditar;
     private javax.swing.JButton btnExcluir;
     private javax.swing.JButton btnInserir;
+    private javax.swing.JButton btnRemover;
     private javax.swing.JButton btnSair;
     private javax.swing.JButton btnSalvar;
     private javax.swing.JComboBox<String> comboboxSexo;
@@ -494,8 +647,8 @@ public class FormClientes extends javax.swing.JFrame {
     private javax.swing.JTextField txtBairro;
     private javax.swing.JTextField txtCidade;
     private javax.swing.JTextField txtCodigo;
+    private javax.swing.JTextField txtCodigoArea;
     private javax.swing.JTextField txtCpf;
-    private javax.swing.JTextField txtDdd;
     private javax.swing.JTextField txtEndereco;
     private javax.swing.JTextField txtLimiteDeCredito;
     private javax.swing.JTextField txtNome;

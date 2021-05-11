@@ -13,7 +13,8 @@ public class CadastroDeClientes {
     
     
     private int codigo,
-                codigoArea; // DDD
+                codigoArea, // DDD
+                contador;
     
     private String nome,
                     endereco,
@@ -123,6 +124,14 @@ public class CadastroDeClientes {
 
     public void setSexo(String sexo) {
         this.sexo = sexo;
+    }
+
+    public int getContador() {
+        return contador;
+    }
+
+    public void setContador(int contador) {
+        this.contador = contador;
     }
 
     

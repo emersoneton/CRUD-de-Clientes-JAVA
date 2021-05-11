@@ -11,6 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -53,11 +54,41 @@ public class ClientesDAO {
             //Insere os dados no BD
             salvar.execute();
 
+            JOptionPane.showMessageDialog(null, "CADASTRO DE CLIENTE SALVO COM SUCESSO!");
+            
             //Fecha a conexão com o BD
             con.close();
 
         } catch (SQLException ex) {
             Logger.getLogger(ClientesDAO.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Erro ao salvar"+ex);
+        }
+
+    }
+
+    public void SalvarTelefones(CadastroDeClientes cli) {
+
+        Conexao();
+
+        try {
+            PreparedStatement salvar = con.prepareStatement("INSERT INTO clientetelefones(CodCliente,CodigoArea,Telefone,Observacao) VALUES(?,?,?,?)");
+
+            for (int x = 0; x <= cli.getContador(); x++) {
+                
+                salvar.setString(1, ""+cli.getCodigo());
+                salvar.setString(2, ""+cli.getCodigoArea());
+                salvar.setString(3, cli.getTelefone());
+                salvar.setString(4, cli.getObservacao());
+                
+                salvar.execute();
+                
+            }
+
+            con.close();
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(ClientesDAO.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Erro ao salvar"+ex);
         }
 
     }
