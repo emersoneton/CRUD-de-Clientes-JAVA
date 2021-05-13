@@ -98,7 +98,7 @@ public class ClientesDAO {
     }
 
     //BUSCA DO CLIENTE
-    public void BuscarCliente(CadastroDeClientes cli) {
+    public boolean BuscarCliente(CadastroDeClientes cli) {
 
         Conexao();
 
@@ -119,15 +119,20 @@ public class ClientesDAO {
                 cli.setLimiteCredito(Double.parseDouble(rs.getString("LimiteCredito")));
                 cli.setValorGasto(Double.parseDouble(rs.getString("ValorGastos")));
                 cli.setSexo(rs.getString("Sexo"));
-                System.out.println(rs.getString("Sexo"));
 
-                validar = true;
+                return validar = true;
 
             }
-
+            
+            
+            con.close();
+            
         } catch (SQLException ex) {
             Logger.getLogger(ClientesDAO.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Erro ao Buscar Dados do cliente, referente: " + ex);
         }
+        
+        return validar;
 
     }
 
@@ -153,12 +158,42 @@ public class ClientesDAO {
                 lista.add(cli1);
             }
             
+            con.close();
 
         } catch (SQLException ex) {
             Logger.getLogger(ClientesDAO.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Erro ao Buscar Dados do Telefone, referente: " + ex);
         }
 
         return lista;
     }
+    
+    
+    public void DeletarClientes(CadastroDeClientes cli){
+        
+        Conexao();
+        
+        try {
+            PreparedStatement deletar = con.prepareStatement("DELETE FROM clientes WHERE CodCliente = ?");                    // Deleta os dados da tabela Clientes
+            PreparedStatement deletarTelefones = con.prepareStatement("DELETE FROM clientetelefones WHERE CodCliente = ?");   // Deleta os dados da tabela ClienteTelefones
+            
+            deletar.setString(1, ""+cli.getCodigo());             // Recebe a informação do ? e preenche com os dados do código informado para a exclusão da tabela Clientes
+            deletarTelefones.setString(1, ""+cli.getCodigo());    // Recebe a informação do ? e preenche com os dados do código informado para a exclusão da tabela ClienteTelefones
+            
+            deletar.execute();            // Executa a ação do SQL em Exclusão de dados no BD na tabela Clientes
+            deletarTelefones.execute();   // Executa a ação do SQL em Exclusão de dados no BD na tabela ClienteTelefones
+            
+            JOptionPane.showMessageDialog(null, "CADASTRO DE CLIENTE EXCLUIDO COM SUCESSO!");
+            
+            con.close();
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(ClientesDAO.class.getName()).log(Level.SEVERE, null, ex);
+            JOptionPane.showMessageDialog(null, "Erro ao Deletar Dados do cliente, referente: " + ex);
+        }
+        
+    }
+    
+    
 
 }

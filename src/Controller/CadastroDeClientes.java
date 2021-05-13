@@ -13,7 +13,7 @@ public class CadastroDeClientes {
     
     
     private int codigo,
-                codigoArea, // DDD
+                codigoArea = 00, // DDD
                 contador;   // Testar se a tabela está vazia
     
     private String nome,

@@ -10,6 +10,7 @@ import Classes.SoNumeros;
 import Controller.CadastroDeClientes;
 import Model.ClientesDAO;
 import Tabelas.TableModelClientes;
+import java.awt.event.KeyEvent;
 import java.text.ParseException;
 import java.util.List;
 import java.util.logging.Level;
@@ -34,16 +35,15 @@ public class FormClientes extends javax.swing.JFrame {
         tabelaTelefones.setModel(tabelaInsereTelefone);  // SETA E INICIALIZA A TABELA ABSTRATA COM AS COLUNAS E O VINCULO DA TABELA
         Mascaras();                                     // Inicializa a função de Mascaras nos campos que utilizam informações de separação
         txtNome.setDocument(new SoLetrasMaiusculas()); // Atribui uma classe de Letras Maiusculas para não deixar o usuario colocar letras minusculas
-        
+        txtCodigo.requestFocus();                     // Seta o ponteiro para o código do cliente
+
         // Atribui uma classe de Numéricos para não deixar o usuario colocar nada alem de numeros neste campo
-        txtCodigo.setDocument(new SoNumeros());       
+        txtCodigo.setDocument(new SoNumeros());
         txtTelefone.setDocument(new SoNumeros());
         txtLimiteDeCredito.setDocument(new SoNumeros());
         txtValorGasto.setDocument(new SoNumeros());
         // ***************************************************************************************************
-        
-        
-        
+
     }
 
     /**
@@ -157,6 +157,11 @@ public class FormClientes extends javax.swing.JFrame {
                 btnInserirActionPerformed(evt);
             }
         });
+        btnInserir.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                btnInserirKeyPressed(evt);
+            }
+        });
 
         tabelaTelefones.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -245,7 +250,6 @@ public class FormClientes extends javax.swing.JFrame {
                         .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(txtNome)
                             .addGroup(jPanel5Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                                 .addComponent(jLabel4)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
@@ -378,6 +382,11 @@ public class FormClientes extends javax.swing.JFrame {
 
         btnExcluir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/deletar.png"))); // NOI18N
         btnExcluir.setText("Excluir");
+        btnExcluir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExcluirActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel6Layout = new javax.swing.GroupLayout(jPanel6);
         jPanel6.setLayout(jPanel6Layout);
@@ -578,9 +587,39 @@ public class FormClientes extends javax.swing.JFrame {
     //BOTÃO DE INSERIR DADOS DE TELEFONE NA TEBELA DE TELEFONES
     private void btnInserirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInserirActionPerformed
 
-        InsereTelefonesNaTabela();
+        ValidaDadosDeTelefones(); // Valida se os campos Código de Area e Telefone foram Preenchidos antes de inserir na tabela de telefones
+
+        if (ValidaDadosDeTelefones() == true) {
+            InsereTelefonesNaTabela();
+        }else JOptionPane.showMessageDialog(null, "Os campos de (Código de Área) e (Telefone) devem ser preenchidos antes de inserir");
+
 
     }//GEN-LAST:event_btnInserirActionPerformed
+
+    //TESTA SE TEM DADOS PARA SEREM INSERIDOS NA TEBELA DE TELEFONES
+    private boolean ValidaDadosDeTelefones() {
+        boolean valida = false;
+
+        int validadorDeErros = 0;  // Valida se não foram inseridos dados nos campos obrigatórios para insse~ção na tabela de telefones
+
+        if (txtCodigoArea.getText().equals("(  )")) {
+
+            validadorDeErros = 1;
+
+        }
+        if (txtTelefone.getText().length() <= 0) {
+
+            validadorDeErros = 1;
+
+        }
+
+        // Se não teve erros na inserção de dados ele retorna Verdadeiro para o teste de inserção na tabela
+        if (validadorDeErros == 0) { 
+            return valida = true;
+        }
+
+        return valida = false;
+    }
 
     //BOTÃO CANCELAR TUDO
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
@@ -597,6 +636,8 @@ public class FormClientes extends javax.swing.JFrame {
             tabelaInsereTelefone.setValueAt(txtCodigoArea.getText(), tabelaTelefones.getSelectedRow(), 0);
             tabelaInsereTelefone.setValueAt(txtTelefone.getText(), tabelaTelefones.getSelectedRow(), 1);
             tabelaInsereTelefone.setValueAt(txtObservacao.getText(), tabelaTelefones.getSelectedRow(), 2);
+        } else {
+            JOptionPane.showMessageDialog(null, "Não tem Telefone para ser Alterado!");
         }
 
     }//GEN-LAST:event_btnEditarActionPerformed
@@ -608,6 +649,8 @@ public class FormClientes extends javax.swing.JFrame {
 
             tabelaInsereTelefone.removeRow(tabelaTelefones.getSelectedRow()); //Exclui a linha que o usuário selecionou e prescionou o botão de excluir
 
+        } else {
+            JOptionPane.showMessageDialog(null, "Não tem Telefone para serm Excluido!");
         }
 
     }//GEN-LAST:event_btnRemoverActionPerformed
@@ -620,34 +663,71 @@ public class FormClientes extends javax.swing.JFrame {
         ClientesDAO cliDao = new ClientesDAO();
         cliDao.BuscarCliente(cli);
 
-        txtBairro.setText(cli.getBairro());
-        txtCidade.setText(cli.getCidade());
-        txtCpf.setText(cli.getCpf());
-        txtEndereco.setText(cli.getEndereco());
-        txtLimiteDeCredito.setText(String.valueOf(cli.getLimiteCredito()));
-        txtNome.setText(cli.getNome());
-        txtValorGasto.setText(String.valueOf(cli.getValorGasto()));
+        // TESTA SE EXISTE AS INFORMAÇÕES NO BD CONFORME OS PARÂMETROS QUE O CLIENTE INFORMOU
+        if (cliDao.BuscarCliente(cli) == true) {
 
-        //Seleciona qual sexo que foi salvo no cadastro de clientes
-        String sexo = cli.getSexo();
-        if (sexo.trim().equals("1")) {
-            comboboxSexo.setSelectedItem("Masculino");
-        } else if (sexo.trim().equals("2")) {
-            comboboxSexo.setSelectedItem("Feminino");
+            txtBairro.setText(cli.getBairro());
+            txtCidade.setText(cli.getCidade());
+            txtCpf.setText(cli.getCpf());
+            txtEndereco.setText(cli.getEndereco());
+            txtLimiteDeCredito.setText(String.valueOf(cli.getLimiteCredito()));
+            txtNome.setText(cli.getNome());
+            txtValorGasto.setText(String.valueOf(cli.getValorGasto()));
+
+            //Seleciona qual sexo que foi salvo no cadastro de clientes
+            String sexo = cli.getSexo();
+            if (sexo.trim().equals("1")) {
+                comboboxSexo.setSelectedItem("Masculino");
+            } else if (sexo.trim().equals("2")) {
+                comboboxSexo.setSelectedItem("Feminino");
+            }
+
+            List<CadastroDeClientes> lista = cliDao.BuscarTelefoneDeCliente(cli);
+            for (int x = 0; x < lista.size(); x++) {
+                CadastroDeClientes cli1 = new CadastroDeClientes();
+
+                cli1.setCodigoArea(lista.get(x).getCodigoArea());
+                cli1.setTelefone(lista.get(x).getTelefone());
+                cli1.setObservacao(lista.get(x).getObservacao());
+
+                tabelaInsereTelefone.addRow(cli1);
+            }
+
+        } else {
+            JOptionPane.showMessageDialog(null, "NÃO TEM DADOS PARA PARÂMENTROS INFORMADOS NO BANCO DE DADOS!");
+            Cancelar();
         }
 
-        List<CadastroDeClientes> lista = cliDao.BuscarTelefoneDeCliente(cli);
-        for (int x = 0; x < lista.size(); x++) {
-            CadastroDeClientes cli1 = new CadastroDeClientes();
-
-            cli1.setCodigoArea(lista.get(x).getCodigoArea());
-            cli1.setTelefone(lista.get(x).getTelefone());
-            cli1.setObservacao(lista.get(x).getObservacao());
-
-            tabelaInsereTelefone.addRow(cli1);
-        }
 
     }//GEN-LAST:event_btnBuscarActionPerformed
+
+    private void btnExcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnExcluirActionPerformed
+
+        // JOGA UM ALERTA DO PERÍGO DE EXCLUIR UM CLIENTE E VERIFCA SE REALMENTE O USUÁRIO QUER EXCLUIR O CADASTRO
+        int resposta = JOptionPane.showConfirmDialog(null, "Deseja Realmente (EXCLUIR) O Cliente?? \n\n"
+                + "as informações serão deletadas e não poderão ser recuperadas", "ALERTA", JOptionPane.YES_NO_OPTION);
+        if (resposta == JOptionPane.YES_OPTION) {
+            Deletar(); // Chama o método de excluir o cliete
+        }
+
+
+    }//GEN-LAST:event_btnExcluirActionPerformed
+
+    private void btnInserirKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_btnInserirKeyPressed
+
+    }//GEN-LAST:event_btnInserirKeyPressed
+
+    //EXCLUIR CLIENTES DO BD
+    private void Deletar() {
+
+        CadastroDeClientes cli = new CadastroDeClientes();
+        cli.setCodigo(Integer.parseInt(txtCodigo.getText()));
+
+        ClientesDAO cliDao = new ClientesDAO();
+        cliDao.DeletarClientes(cli);
+
+        Cancelar();
+    }
 
     //METODO CANCELAR DO BOTÃO CANCELAR TUDO
     private void Cancelar() {
@@ -670,6 +750,8 @@ public class FormClientes extends javax.swing.JFrame {
         for (int x = 0; x < contadorTabelaTelefone; x++) {
             tabelaInsereTelefone.removeRow(0);
         }
+
+        txtCodigo.requestFocus();
 
     }
 
