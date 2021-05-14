@@ -12,6 +12,7 @@ import Model.ClientesDAO;
 import Tabelas.TableModelClientes;
 import Tabelas.TableModelClientesRelatorios;
 import java.awt.event.KeyEvent;
+import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.List;
 import java.util.logging.Level;
@@ -114,6 +115,7 @@ public class FormClientes extends javax.swing.JFrame {
         cmbCodigo = new javax.swing.JCheckBox();
         cmbNome = new javax.swing.JCheckBox();
         cmbCidade = new javax.swing.JCheckBox();
+        cmbTodos = new javax.swing.JCheckBox();
         Painel9 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tabelaRelatoriosClientes = new javax.swing.JTable();
@@ -410,6 +412,13 @@ public class FormClientes extends javax.swing.JFrame {
             }
         });
 
+        cmbTodos.setText("Todos");
+        cmbTodos.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                cmbTodosMousePressed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel7Layout = new javax.swing.GroupLayout(jPanel7);
         jPanel7.setLayout(jPanel7Layout);
         jPanel7Layout.setHorizontalGroup(
@@ -419,7 +428,8 @@ public class FormClientes extends javax.swing.JFrame {
                 .addGroup(jPanel7Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(cmbCodigo)
                     .addComponent(cmbNome)
-                    .addComponent(cmbCidade))
+                    .addComponent(cmbCidade)
+                    .addComponent(cmbTodos))
                 .addContainerGap(17, Short.MAX_VALUE))
         );
         jPanel7Layout.setVerticalGroup(
@@ -427,10 +437,12 @@ public class FormClientes extends javax.swing.JFrame {
             .addGroup(jPanel7Layout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(cmbCodigo)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(cmbNome)
-                .addGap(18, 18, 18)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(cmbCidade)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(cmbTodos)
                 .addContainerGap())
         );
 
@@ -470,7 +482,7 @@ public class FormClientes extends javax.swing.JFrame {
                                 .addComponent(txtNomeOuCidadeRelatorio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(jLabel14)
                                 .addComponent(txtCodigoRelatorio, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 50, Short.MAX_VALUE))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(jPanel7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
@@ -842,6 +854,8 @@ public class FormClientes extends javax.swing.JFrame {
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
 
+        DecimalFormat df = new DecimalFormat("###,###,###,###,###.00"); // Modifica o formato para REAL (Melhor visualização para o usuario)
+
         CadastroDeClientes cli = new CadastroDeClientes();
         cli.setCodigo(Integer.parseInt(txtCodigo.getText()));
 
@@ -855,9 +869,13 @@ public class FormClientes extends javax.swing.JFrame {
             txtCidade.setText(cli.getCidade());
             txtCpf.setText(cli.getCpf());
             txtEndereco.setText(cli.getEndereco());
-            txtLimiteDeCredito.setText(Double.toString(cli.getLimiteCredito()));
             txtNome.setText(cli.getNome());
-            txtValorGasto.setText(Double.toString(cli.getValorGasto()));
+
+            String limiteCredito = df.format(cli.getLimiteCredito());
+            txtLimiteDeCredito.setText(limiteCredito);
+
+            String valorGastos = df.format(cli.getValorGasto());
+            txtValorGasto.setText(valorGastos);
 
             //Seleciona qual sexo que foi salvo no cadastro de clientes
             String sexo = cli.getSexo();
@@ -918,7 +936,9 @@ public class FormClientes extends javax.swing.JFrame {
 
         cmbCidade.setSelected(false);
         cmbNome.setSelected(false);
+        cmbTodos.setSelected(false);
         txtNomeOuCidadeRelatorio.setEnabled(false);
+        txtCodigoRelatorio.setText("");
 
     }//GEN-LAST:event_cmbCodigoMousePressed
 
@@ -932,7 +952,9 @@ public class FormClientes extends javax.swing.JFrame {
 
         cmbCodigo.setSelected(false);
         cmbCidade.setSelected(false);
+        cmbTodos.setSelected(false);
         txtCodigoRelatorio.setEnabled(false);
+        txtNomeOuCidadeRelatorio.setText("");
 
     }//GEN-LAST:event_cmbNomeMousePressed
 
@@ -946,7 +968,9 @@ public class FormClientes extends javax.swing.JFrame {
 
         cmbCodigo.setSelected(false);
         cmbNome.setSelected(false);
+        cmbTodos.setSelected(false);
         txtCodigoRelatorio.setEnabled(false);
+        txtNomeOuCidadeRelatorio.setText("");
         Lista.setVisible(false);
 
     }//GEN-LAST:event_cmbCidadeMousePressed
@@ -980,6 +1004,19 @@ public class FormClientes extends javax.swing.JFrame {
 
     private void btnBuscarRelatorioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarRelatorioActionPerformed
 
+        int contadorTabela = tabelaInsereRelatorios.getRowCount();
+        if (contadorTabela > 0) {
+            for (int x = 0; x < contadorTabela; x++) {
+                tabelaInsereRelatorios.removeRow(0);
+            }
+        }
+
+        PesquisarRelatoriosDeClientes();
+
+    }//GEN-LAST:event_btnBuscarRelatorioActionPerformed
+
+    private void PesquisarRelatoriosDeClientes() {
+
         CadastroDeClientes cli = new CadastroDeClientes();
         ClientesDAO cliDao = new ClientesDAO();
 
@@ -992,6 +1029,8 @@ public class FormClientes extends javax.swing.JFrame {
         } else if (cmbCidade.isSelected()) {
             cli.setCidade(txtNomeOuCidadeRelatorio.getText());
             cli.setClicked("CIDADE");
+        } else if (cmbTodos.isSelected()) {
+            cli.setClicked("TODOS");
         } else {
             JOptionPane.showMessageDialog(null, "INFORME UMA AÇÃO DE RELATÓRIO ANTES DE PESQUISAR");
         }
@@ -1017,8 +1056,26 @@ public class FormClientes extends javax.swing.JFrame {
             }
         }
 
+    }
 
-    }//GEN-LAST:event_btnBuscarRelatorioActionPerformed
+    private void cmbTodosMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_cmbTodosMousePressed
+
+        if (cmbTodos.isSelected()) {
+            txtNomeOuCidadeRelatorio.setEnabled(false);
+            txtCodigoRelatorio.setEnabled(false);
+        } else {
+            txtNomeOuCidadeRelatorio.setEnabled(false);
+            txtCodigoRelatorio.setEnabled(false);
+        }
+
+        cmbCodigo.setSelected(false);
+        cmbNome.setSelected(false);
+        cmbCidade.setSelected(false);
+        txtNomeOuCidadeRelatorio.setText("");
+        txtCodigoRelatorio.setText("");
+        Lista.setVisible(false);
+
+    }//GEN-LAST:event_cmbTodosMousePressed
 
     //ALTERAR DADOS DE CLIENTES
     private void AlterarCliente() {
@@ -1038,8 +1095,8 @@ public class FormClientes extends javax.swing.JFrame {
             cli.setSexo("10"); // em binário 10 significa 2
         }
 
-        cli.setLimiteCredito(Double.parseDouble(txtLimiteDeCredito.getText().replace(',', '.')));
-        cli.setValorGasto(Double.parseDouble(txtValorGasto.getText().replace(',', '.')));
+        cli.setLimiteCredito(Double.parseDouble(txtLimiteDeCredito.getText().replace(".", "").replace(',', '.')));
+        cli.setValorGasto(Double.parseDouble(txtValorGasto.getText().replace(".", "").replace(',', '.')));
 
         ClientesDAO cliDao = new ClientesDAO();
         cliDao.AlterarCliente(cli);
@@ -1204,6 +1261,7 @@ public class FormClientes extends javax.swing.JFrame {
     private javax.swing.JCheckBox cmbCidade;
     private javax.swing.JCheckBox cmbCodigo;
     private javax.swing.JCheckBox cmbNome;
+    private javax.swing.JCheckBox cmbTodos;
     private javax.swing.JComboBox<String> comboboxSexo;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;

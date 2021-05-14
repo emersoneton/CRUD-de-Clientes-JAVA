@@ -357,6 +357,38 @@ public class ClientesDAO {
             }
 
         }
+        
+        
+        //BUSCA TODOS OS CLIENTES
+        if (cli.getClicked() == "TODOS") {
+
+            try {
+                PreparedStatement buscar = con.prepareStatement("SELECT * FROM clientes ORDER BY CodCliente");
+
+                ResultSet rs = buscar.executeQuery();
+
+                while (rs.next()) {
+
+                    CadastroDeClientes cli2 = new CadastroDeClientes();
+
+                    cli2.setCodigo(Integer.parseInt(rs.getString("CodCliente")));
+                    cli2.setCpf(rs.getString("Cpf"));
+                    cli2.setNome(rs.getString("Nome"));
+                    cli2.setEndereco(rs.getString("Endereco"));
+                    cli2.setCidade(rs.getString("Cidade"));
+                    cli2.setBairro(rs.getString("Bairro"));
+
+                    lista.add(cli2);
+
+                }
+
+                con.close();
+
+            } catch (SQLException ex) {
+                Logger.getLogger(ClientesDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+        }
 
         return lista;
 

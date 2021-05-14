@@ -535,7 +535,7 @@
                                               <Component id="txtCodigoRelatorio" alignment="3" min="-2" max="-2" attributes="0"/>
                                           </Group>
                                       </Group>
-                                      <EmptySpace min="0" pref="50" max="32767" attributes="0"/>
+                                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
                                   </Group>
                                   <Component id="jPanel7" alignment="0" max="32767" attributes="0"/>
                               </Group>
@@ -602,6 +602,7 @@
                                       <Component id="cmbCodigo" alignment="0" min="-2" max="-2" attributes="0"/>
                                       <Component id="cmbNome" alignment="0" min="-2" max="-2" attributes="0"/>
                                       <Component id="cmbCidade" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cmbTodos" alignment="0" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <EmptySpace pref="17" max="32767" attributes="0"/>
                               </Group>
@@ -612,10 +613,12 @@
                               <Group type="102" alignment="0" attributes="0">
                                   <EmptySpace max="-2" attributes="0"/>
                                   <Component id="cmbCodigo" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace max="32767" attributes="0"/>
+                                  <EmptySpace max="-2" attributes="0"/>
                                   <Component id="cmbNome" min="-2" max="-2" attributes="0"/>
-                                  <EmptySpace type="separate" max="-2" attributes="0"/>
+                                  <EmptySpace type="unrelated" max="-2" attributes="0"/>
                                   <Component id="cmbCidade" min="-2" max="-2" attributes="0"/>
+                                  <EmptySpace max="32767" attributes="0"/>
+                                  <Component id="cmbTodos" min="-2" max="-2" attributes="0"/>
                                   <EmptySpace max="-2" attributes="0"/>
                               </Group>
                           </Group>
@@ -644,6 +647,14 @@
                           </Properties>
                           <Events>
                             <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="cmbCidadeMousePressed"/>
+                          </Events>
+                        </Component>
+                        <Component class="javax.swing.JCheckBox" name="cmbTodos">
+                          <Properties>
+                            <Property name="text" type="java.lang.String" value="Todos"/>
+                          </Properties>
+                          <Events>
+                            <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="cmbTodosMousePressed"/>
                           </Events>
                         </Component>
                       </SubComponents>
