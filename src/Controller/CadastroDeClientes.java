@@ -23,7 +23,8 @@ public class CadastroDeClientes {
                     cpf,
                     telefone,
                     observacao,
-                    sexo;
+                    sexo,
+                    clicked; // Utilizado para enviar qual Combobox foi selecionado na pesquisa de relatório
     
     private double limiteCredito = 0,
                     valorGasto;
@@ -132,6 +133,14 @@ public class CadastroDeClientes {
 
     public void setContador(int contador) {
         this.contador = contador;
+    }
+
+    public String getClicked() {
+        return clicked;
+    }
+
+    public void setClicked(String clicked) {
+        this.clicked = clicked;
     }
 
     
