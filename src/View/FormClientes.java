@@ -954,11 +954,13 @@ public class FormClientes extends javax.swing.JFrame {
     // BOTÃO ALTERAR ITENS DA TABELA DE TELEFONES
     private void btnEditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditarActionPerformed
 
-        if (tabelaTelefones.getSelectedRow() != -1) { // Se for diferente de -1 existe algo na tabela.
+        if (tabelaTelefones.getSelectedRow() != -1) { // Se for diferente de -1 existe algo na tabela
+
             //Altera a linha e coluna que o usuario clicou quando prescionou o botão de Alterar
-            tabelaInsereTelefone.setValueAt(txtCodigoArea.getText(), tabelaTelefones.getSelectedRow(), 0);
+            tabelaInsereTelefone.setValueAt(txtCodigoArea.getText().replace("(", "").replace(")", ""), tabelaTelefones.getSelectedRow(), 0);
             tabelaInsereTelefone.setValueAt(txtTelefone.getText(), tabelaTelefones.getSelectedRow(), 1);
             tabelaInsereTelefone.setValueAt(txtObservacao.getText(), tabelaTelefones.getSelectedRow(), 2);
+
         } else {
             JOptionPane.showMessageDialog(null, "Não tem Telefone para ser Alterado!");
         }
@@ -1374,22 +1376,60 @@ public class FormClientes extends javax.swing.JFrame {
         cli.setValorGasto(Double.parseDouble(txtValorGasto.getText().replace(".", "").replace(',', '.')));
 
         ClientesDAO cliDao = new ClientesDAO();
-     //   cliDao.AlterarCliente(cli);
+        cliDao.AlterarCliente(cli);
 
         // Altera os dados de telefone se tiver
         int contTabela = tabelaTelefones.getRowCount();
         if (contTabela > 0) {
-            
+            List<CadastroDeClientes> lista = cliDao.BuscarTelefoneDeCliente(cli);
+
             for (int x = 0; x < contTabela; x++) {
-                
+
                 CadastroDeClientes cli1 = new CadastroDeClientes();
 
                 cli1.setCodigo(Integer.parseInt(txtCodigo.getText()));
                 cli1.setCodigoArea(Integer.parseInt(tabelaInsereTelefone.getValueAt(x, 0).toString()));
                 cli1.setTelefone(tabelaInsereTelefone.getValueAt(x, 1).toString());
                 cli1.setObservacao(tabelaInsereTelefone.getValueAt(x, 2).toString());
-                
-                
+
+                int validaTabelas = 0; // VALIDA SE OS VALORES ENTRE TABELAS ESTÃO IGUAIS OU FORAM ALTERADOSl
+
+                // ANALISO A TABELA DO BD COM A TABELA DO PROGRAMA PARA VERIFICAR SE ALGUM VALOR FOI ALTERADO PARA A ATUALIZAÇÃO
+                if (tabelaInsereTelefone.getValueAt(x, 0).equals(lista.get(x).getCodigoArea())) {
+                    
+                    // AQUI AS INFORMAÇÕES SÃO IGUAIS ENTÃO ELE NÃO FAZ NADA
+                    System.out.println("DDD Igual");
+                    
+                } else {
+
+                    System.out.println("DDD foi alterado");
+                    validaTabelas = 1;
+
+                }
+                if (tabelaInsereTelefone.getValueAt(x, 1).toString().trim().equals(lista.get(x).getTelefone())) {
+
+                    // AQUI AS INFORMAÇÕES SÃO IGUAIS ENTÃO ELE NÃO FAZ NADA
+                    System.out.println("TELEFONE Igual");
+
+                } else {
+
+                    System.out.println("TELEFONE foi alterado");
+                    validaTabelas = 1;
+                }
+                if (tabelaInsereTelefone.getValueAt(x, 2).toString().trim().equals(lista.get(x).getObservacao())) {
+
+                    // AQUI AS INFORMAÇÕES SÃO IGUAIS ENTÃO ELE NÃO FAZ NADA
+                    System.out.println("observação Igual");
+
+                } else {
+                    System.out.println("OBSERVAÇAO foi alterado");
+                    validaTabelas = 1;
+                }
+
+                if (validaTabelas == 1) {
+                    cli1.setCodigo(lista.get(x).getCodigo()); // RECEBE O CÓDIGO DA LISTA 
+                    cliDao.AlterarTelefoneCliente(cli1);
+                }
 
             }
         }

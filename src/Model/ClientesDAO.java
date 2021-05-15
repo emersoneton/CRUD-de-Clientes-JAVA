@@ -107,24 +107,24 @@ public class ClientesDAO {
 
         String codigo = null;
         try {
-            
+
             PreparedStatement buscar = con.prepareStatement("SELECT MAX(CodClienteTelefone +1) AS codigo FROM clientetelefones");
-            
+
             ResultSet rs = buscar.executeQuery();
-            
+
             while (rs.next()) {
 
                 codigo = rs.getString("codigo");
-                
+
             }
- 
+
             if (codigo != null) {
             } else {
                 codigo = "1";
             }
-            
+
             System.out.println(codigo);
-            
+
             PreparedStatement salvar = con.prepareStatement("INSERT INTO clientetelefones(CodClienteTelefone,CodCliente,CodigoArea,Telefone,Observacao) VALUES(?,?,?,?,?)");
 
             for (int x = 0; x <= cli.getContador(); x++) {
@@ -211,6 +211,7 @@ public class ClientesDAO {
             while (rs.next()) {
                 CadastroDeClientes cli1 = new CadastroDeClientes();
 
+                cli1.setCodigo(Integer.parseInt(rs.getString("CodClienteTelefone")));
                 cli1.setCodigoArea(Integer.parseInt(rs.getString("CodigoArea")));
                 cli1.setTelefone(rs.getString("Telefone"));
                 cli1.setObservacao(rs.getString("Observacao"));
@@ -291,10 +292,26 @@ public class ClientesDAO {
 
         Conexao();
 
-        
+        try {
+
+            PreparedStatement alterar = con.prepareStatement("UPDATE clientetelefones SET CodigoArea = ?, "
+                    + "Telefone = ?, Observacao = ? WHERE CodClienteTelefone = ?");
+
+            alterar.setString(1, "" + cli.getCodigoArea());
+            alterar.setString(2, cli.getTelefone());
+            alterar.setString(3, cli.getObservacao());
+            alterar.setString(4, "" + cli.getCodigo());
+
+            alterar.execute();
+            
+            con.close();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(ClientesDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
     }
-    
-    
+
     //USADO PARA FAZER UMA PESQUISA DE CLIENTE EM UMA LILSTA COM CARACTERES INFORMADOS NO CAMPO DE PESQUISA DO NOME
     public List<CadastroDeClientes> ListaDePesquisa(CadastroDeClientes cli) {
         List<CadastroDeClientes> lista = new ArrayList<>();
