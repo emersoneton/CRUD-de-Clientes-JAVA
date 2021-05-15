@@ -105,22 +105,32 @@ public class ClientesDAO {
         boolean validar = false;
 
         try {
-            PreparedStatement buscar = con.prepareStatement("SELECT *, BINARY(Sexo) AS SexoBIT FROM clientes WHERE CodCliente = " + cli.getCodigo() + "");
+            PreparedStatement buscar = con.prepareStatement("SELECT *, BINARY(Sexo) AS SexoBIT FROM clientes");
 
             ResultSet rs = buscar.executeQuery();
 
+            String codigoDigitado = ""+cli.getCodigo();
+            String nomeDigitado = cli.getNome();
+            
             while (rs.next()) {
+                String codigo = rs.getString("CodCliente");
+                String nome = rs.getString("Nome");
+                
+                if (nome.trim().equals(nomeDigitado) || codigo.trim().equals(codigoDigitado)) {
 
-                cli.setNome(rs.getString("Nome"));
-                cli.setEndereco(rs.getString("Endereco"));
-                cli.setCidade(rs.getString("Cidade"));
-                cli.setBairro(rs.getString("Bairro"));
-                cli.setCpf(rs.getString("Cpf"));
-                cli.setLimiteCredito(Double.parseDouble(rs.getString("LimiteCredito")));
-                cli.setValorGasto(Double.parseDouble(rs.getString("ValorGastos")));
-                cli.setSexo(rs.getString("Sexo"));
+                    cli.setCodigo(Integer.parseInt(rs.getString("CodCliente")));
+                    cli.setNome(rs.getString("Nome"));
+                    cli.setEndereco(rs.getString("Endereco"));
+                    cli.setCidade(rs.getString("Cidade"));
+                    cli.setBairro(rs.getString("Bairro"));
+                    cli.setCpf(rs.getString("Cpf"));
+                    cli.setLimiteCredito(Double.parseDouble(rs.getString("LimiteCredito")));
+                    cli.setValorGasto(Double.parseDouble(rs.getString("ValorGastos")));
+                    cli.setSexo(rs.getString("Sexo"));
 
-                return validar = true;
+                    return validar = true;
+
+                }
 
             }
 
@@ -225,7 +235,6 @@ public class ClientesDAO {
 
     }
 
-    
     //USADO PARA FAZER UMA PESQUISA DE CLIENTE EM UMA LILSTA COM CARACTERES INFORMADOS NO CAMPO DE PESQUISA DO NOME
     public List<CadastroDeClientes> ListaDePesquisa(CadastroDeClientes cli) {
         List<CadastroDeClientes> lista = new ArrayList<>();
@@ -253,7 +262,6 @@ public class ClientesDAO {
         return lista;
     }
 
-    
     // BUSCA DADOS PARA PREENSER A TABELA DE RELATÓRIOS DOS CLIENTES CONFORME O COMBOBOX SELECIONADO
     public List<CadastroDeClientes> PesquisaDeRelatorio(CadastroDeClientes cli) {
 
@@ -281,6 +289,9 @@ public class ClientesDAO {
                     cli2.setEndereco(rs.getString("Endereco"));
                     cli2.setCidade(rs.getString("Cidade"));
                     cli2.setBairro(rs.getString("Bairro"));
+                    cli2.setValorGasto(Double.parseDouble(rs.getString("ValorGastos")));
+                    cli2.setLimiteCredito(Double.parseDouble(rs.getString("LimiteCredito")));
+                    cli2.setSexo(rs.getString("Sexo"));
 
                     lista.add(cli2);
 
@@ -314,6 +325,9 @@ public class ClientesDAO {
                     cli2.setEndereco(rs.getString("Endereco"));
                     cli2.setCidade(rs.getString("Cidade"));
                     cli2.setBairro(rs.getString("Bairro"));
+                    cli2.setValorGasto(Double.parseDouble(rs.getString("ValorGastos")));
+                    cli2.setLimiteCredito(Double.parseDouble(rs.getString("LimiteCredito")));
+                    cli2.setSexo(rs.getString("Sexo"));
 
                     lista.add(cli2);
 
@@ -345,6 +359,9 @@ public class ClientesDAO {
                     cli2.setEndereco(rs.getString("Endereco"));
                     cli2.setCidade(rs.getString("Cidade"));
                     cli2.setBairro(rs.getString("Bairro"));
+                    cli2.setValorGasto(Double.parseDouble(rs.getString("ValorGastos")));
+                    cli2.setLimiteCredito(Double.parseDouble(rs.getString("LimiteCredito")));
+                    cli2.setSexo(rs.getString("Sexo"));
 
                     lista.add(cli2);
 
@@ -357,14 +374,13 @@ public class ClientesDAO {
             }
 
         }
-        
-        
+
         //BUSCA TODOS OS CLIENTES
         if (cli.getClicked() == "TODOS") {
 
             try {
                 PreparedStatement buscar = con.prepareStatement("SELECT * FROM clientes ORDER BY CodCliente");
-
+                               
                 ResultSet rs = buscar.executeQuery();
 
                 while (rs.next()) {
@@ -377,6 +393,9 @@ public class ClientesDAO {
                     cli2.setEndereco(rs.getString("Endereco"));
                     cli2.setCidade(rs.getString("Cidade"));
                     cli2.setBairro(rs.getString("Bairro"));
+                    cli2.setValorGasto(Double.parseDouble(rs.getString("ValorGastos")));
+                    cli2.setLimiteCredito(Double.parseDouble(rs.getString("LimiteCredito")));
+                    cli2.setSexo(rs.getString("Sexo"));
 
                     lista.add(cli2);
 
@@ -392,6 +411,40 @@ public class ClientesDAO {
 
         return lista;
 
+    }
+    
+    // BUSCA DADOS PARA GERAR PDF COM O TELEFONE DE CADA USUÁRIO
+    public List<CadastroDeClientes> PesquisaDeTelefonesParaGerarPdf(CadastroDeClientes cli) {
+        
+        Conexao();
+
+        List<CadastroDeClientes> lista = new ArrayList<>();
+        
+        try {
+                PreparedStatement buscar = con.prepareStatement("SELECT * FROM clientetelefones");
+                               
+                ResultSet rs = buscar.executeQuery();
+
+                while (rs.next()) {
+
+                    CadastroDeClientes cli2 = new CadastroDeClientes();
+
+                    cli2.setCodigo(Integer.parseInt(rs.getString("CodCliente")));
+                    cli2.setCodigoArea(Integer.parseInt(rs.getString("CodigoArea")));
+                    cli2.setTelefone(rs.getString("Telefone"));
+                    cli2.setObservacao(rs.getString("Observacao"));
+
+                    lista.add(cli2);
+
+                }
+
+                con.close();
+
+            } catch (SQLException ex) {
+                Logger.getLogger(ClientesDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        
+        return lista;
     }
 
 }
