@@ -69,7 +69,7 @@ public class GeraPdf {
             document.add(new Paragraph("  "
                     + ""
                     + ""));
-            document.add(new Paragraph("Os dados do relatório contém: Nome, CPF, Cidade, Endereço, Bairro, Limite de Crédito, Valor de Gastos e Sexo."));
+            document.add(new Paragraph("Os dados do relatório contém: Nome, CPF, Cidade, Endereço, Bairro, Limite de Crédito, Valor de Gastos, Sexo e Telefones."));
             document.add(new Paragraph("****************************************************************************************************************"));
             document.add(new Paragraph("  "));
             document.add(new Paragraph("  "));
@@ -89,7 +89,7 @@ public class GeraPdf {
                     validaSexo = "Feminino";
                 }
 
-                document.add(new Paragraph((x + 1) + " - " + lista.get(x).getNome() + "   CPF - " + lista.get(x).getCpf() + "\nCidade: " + lista.get(x).getCidade()
+                document.add(new Paragraph((x + 1) + " - " + lista.get(x).getNome() + " (Cod "+lista.get(x).getCodigo()+")   CPF - " + lista.get(x).getCpf() + "\nCidade: " + lista.get(x).getCidade()
                         + ",   Endereço: " + lista.get(x).getEndereco() + ",   Bairro: " + lista.get(x).getBairro() + "\nLimite de Crédito R$" + df.format(lista.get(x).getLimiteCredito())
                         + ",   Valor de Gastos R$" + df.format(lista.get(x).getValorGasto()) + "\nSexo: " + validaSexo));
 

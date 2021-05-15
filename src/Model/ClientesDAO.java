@@ -30,6 +30,37 @@ public class ClientesDAO {
         this.con = Database.getConnection();
     }
 
+    // BUSCAR ULTIMO CODIGO DE CLIENTE VÁLIDO
+    public void BuscarCodigoCliente(CadastroDeClientes cli) {
+
+        Conexao();
+
+        String codigo = null;
+        try {
+            PreparedStatement buscar = con.prepareStatement("SELECT MAX(CodCliente +1) AS codigo FROM clientes");
+
+            ResultSet rs = buscar.executeQuery();
+
+            while (rs.next()) {
+
+                codigo = rs.getString("codigo");
+
+            }
+
+            if (codigo != null) {
+                cli.setCodigo(Integer.parseInt(codigo));
+            } else {
+                cli.setCodigo(Integer.parseInt("1"));
+            }
+
+            con.close();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(ClientesDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+    }
+
     // Salva o cliente no Banco de Dados
     public void Salvar(CadastroDeClientes cli) {
 
@@ -74,15 +105,35 @@ public class ClientesDAO {
 
         Conexao();
 
+        String codigo = null;
         try {
-            PreparedStatement salvar = con.prepareStatement("INSERT INTO clientetelefones(CodCliente,CodigoArea,Telefone,Observacao) VALUES(?,?,?,?)");
+            
+            PreparedStatement buscar = con.prepareStatement("SELECT MAX(CodClienteTelefone +1) AS codigo FROM clientetelefones");
+            
+            ResultSet rs = buscar.executeQuery();
+            
+            while (rs.next()) {
+
+                codigo = rs.getString("codigo");
+                
+            }
+ 
+            if (codigo != null) {
+            } else {
+                codigo = "1";
+            }
+            
+            System.out.println(codigo);
+            
+            PreparedStatement salvar = con.prepareStatement("INSERT INTO clientetelefones(CodClienteTelefone,CodCliente,CodigoArea,Telefone,Observacao) VALUES(?,?,?,?,?)");
 
             for (int x = 0; x <= cli.getContador(); x++) {
 
-                salvar.setString(1, "" + cli.getCodigo());
-                salvar.setString(2, "" + cli.getCodigoArea());
-                salvar.setString(3, cli.getTelefone());
-                salvar.setString(4, cli.getObservacao());
+                salvar.setString(1, codigo);
+                salvar.setString(2, "" + cli.getCodigo());
+                salvar.setString(3, "" + cli.getCodigoArea());
+                salvar.setString(4, cli.getTelefone());
+                salvar.setString(5, cli.getObservacao());
 
                 salvar.execute();
 
@@ -109,13 +160,13 @@ public class ClientesDAO {
 
             ResultSet rs = buscar.executeQuery();
 
-            String codigoDigitado = ""+cli.getCodigo();
+            String codigoDigitado = "" + cli.getCodigo();
             String nomeDigitado = cli.getNome();
-            
+
             while (rs.next()) {
                 String codigo = rs.getString("CodCliente");
                 String nome = rs.getString("Nome");
-                
+
                 if (nome.trim().equals(nomeDigitado) || codigo.trim().equals(codigoDigitado)) {
 
                     cli.setCodigo(Integer.parseInt(rs.getString("CodCliente")));
@@ -235,6 +286,15 @@ public class ClientesDAO {
 
     }
 
+    // ALTERA AS INFORMAÇÕES DO CLIENTE NO BD
+    public void AlterarTelefoneCliente(CadastroDeClientes cli) {
+
+        Conexao();
+
+        
+    }
+    
+    
     //USADO PARA FAZER UMA PESQUISA DE CLIENTE EM UMA LILSTA COM CARACTERES INFORMADOS NO CAMPO DE PESQUISA DO NOME
     public List<CadastroDeClientes> ListaDePesquisa(CadastroDeClientes cli) {
         List<CadastroDeClientes> lista = new ArrayList<>();
@@ -380,7 +440,7 @@ public class ClientesDAO {
 
             try {
                 PreparedStatement buscar = con.prepareStatement("SELECT * FROM clientes ORDER BY CodCliente");
-                               
+
                 ResultSet rs = buscar.executeQuery();
 
                 while (rs.next()) {
@@ -412,38 +472,38 @@ public class ClientesDAO {
         return lista;
 
     }
-    
+
     // BUSCA DADOS PARA GERAR PDF COM O TELEFONE DE CADA USUÁRIO
     public List<CadastroDeClientes> PesquisaDeTelefonesParaGerarPdf(CadastroDeClientes cli) {
-        
+
         Conexao();
 
         List<CadastroDeClientes> lista = new ArrayList<>();
-        
+
         try {
-                PreparedStatement buscar = con.prepareStatement("SELECT * FROM clientetelefones");
-                               
-                ResultSet rs = buscar.executeQuery();
+            PreparedStatement buscar = con.prepareStatement("SELECT * FROM clientetelefones");
 
-                while (rs.next()) {
+            ResultSet rs = buscar.executeQuery();
 
-                    CadastroDeClientes cli2 = new CadastroDeClientes();
+            while (rs.next()) {
 
-                    cli2.setCodigo(Integer.parseInt(rs.getString("CodCliente")));
-                    cli2.setCodigoArea(Integer.parseInt(rs.getString("CodigoArea")));
-                    cli2.setTelefone(rs.getString("Telefone"));
-                    cli2.setObservacao(rs.getString("Observacao"));
+                CadastroDeClientes cli2 = new CadastroDeClientes();
 
-                    lista.add(cli2);
+                cli2.setCodigo(Integer.parseInt(rs.getString("CodCliente")));
+                cli2.setCodigoArea(Integer.parseInt(rs.getString("CodigoArea")));
+                cli2.setTelefone(rs.getString("Telefone"));
+                cli2.setObservacao(rs.getString("Observacao"));
 
-                }
+                lista.add(cli2);
 
-                con.close();
-
-            } catch (SQLException ex) {
-                Logger.getLogger(ClientesDAO.class.getName()).log(Level.SEVERE, null, ex);
             }
-        
+
+            con.close();
+
+        } catch (SQLException ex) {
+            Logger.getLogger(ClientesDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
         return lista;
     }
 
