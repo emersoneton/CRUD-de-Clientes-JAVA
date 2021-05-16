@@ -5,14 +5,13 @@
  */
 package View;
 
-import Classes.SoLetrasMaiusculas;
-import Classes.SoNumeros;
 import Controller.CadastroDeClientes;
+import Classes.DocumentoLimitado;
 import Controller.GeraPdf;
 import Model.ClientesDAO;
 import Tabelas.TableModelClientes;
 import Tabelas.TableModelClientesRelatorios;
-import com.sun.xml.internal.bind.v2.runtime.output.SAXOutput;
+import java.awt.event.KeyEvent;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.List;
@@ -21,7 +20,6 @@ import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import javax.swing.text.MaskFormatter;
-import jdk.nashorn.internal.ir.BreakNode;
 
 /**
  *
@@ -76,7 +74,6 @@ public class FormClientes extends javax.swing.JFrame {
         comboboxSexo = new javax.swing.JComboBox<>();
         jLabel11 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
-        txtTelefone = new javax.swing.JTextField();
         jLabel13 = new javax.swing.JLabel();
         txtObservacao = new javax.swing.JTextField();
         btnInserir = new javax.swing.JButton();
@@ -90,6 +87,7 @@ public class FormClientes extends javax.swing.JFrame {
         txtCpf = new javax.swing.JFormattedTextField();
         txtCodigoArea = new javax.swing.JFormattedTextField();
         txtCidade = new javax.swing.JTextField();
+        txtTelefone = new javax.swing.JFormattedTextField();
         painelRelatorio = new javax.swing.JPanel();
         jPanel8 = new javax.swing.JPanel();
         jLabel15 = new javax.swing.JLabel();
@@ -122,7 +120,6 @@ public class FormClientes extends javax.swing.JFrame {
         jPanel2.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
 
         jLabel1.setFont(new java.awt.Font("Times New Roman", 1, 36)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(204, 0, 0));
         jLabel1.setText("CLIENTES");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -138,8 +135,8 @@ public class FormClientes extends javax.swing.JFrame {
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(jLabel1)
-                .addContainerGap(15, Short.MAX_VALUE))
+                .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, 46, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         paineisDeAcao.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(0, 0, 0)));
@@ -272,10 +269,31 @@ public class FormClientes extends javax.swing.JFrame {
                 txtCpfMousePressed(evt);
             }
         });
+        txtCpf.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtCpfActionPerformed(evt);
+            }
+        });
 
+        txtCodigoArea.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                txtCodigoAreaMousePressed(evt);
+            }
+        });
         txtCodigoArea.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtCodigoAreaActionPerformed(evt);
+            }
+        });
+        txtCodigoArea.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtCodigoAreaKeyPressed(evt);
+            }
+        });
+
+        txtTelefone.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                txtTelefoneMousePressed(evt);
             }
         });
 
@@ -304,9 +322,9 @@ public class FormClientes extends javax.swing.JFrame {
                                         .addComponent(txtCidade, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(13, 13, 13)
                                         .addComponent(jLabel6)
-                                        .addGap(4, 4, 4)
-                                        .addComponent(txtBairro, javax.swing.GroupLayout.PREFERRED_SIZE, 265, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(73, 73, 73)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(txtBairro, javax.swing.GroupLayout.PREFERRED_SIZE, 320, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGap(18, 18, 18)
                                         .addComponent(jLabel8)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(comboboxSexo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
@@ -337,6 +355,7 @@ public class FormClientes extends javax.swing.JFrame {
                                 .addComponent(btnEditar, javax.swing.GroupLayout.PREFERRED_SIZE, 76, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
                                 .addComponent(btnRemover, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
                             .addGroup(painelCadastroLayout.createSequentialGroup()
                                 .addComponent(jLabel11)
                                 .addGap(30, 30, 30)
@@ -350,8 +369,7 @@ public class FormClientes extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(txtObservacao, javax.swing.GroupLayout.PREFERRED_SIZE, 291, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(18, 18, 18)
-                                .addComponent(btnInserir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING))
+                                .addComponent(btnInserir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                         .addContainerGap())))
         );
         painelCadastroLayout.setVerticalGroup(
@@ -395,10 +413,10 @@ public class FormClientes extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
                 .addGroup(painelCadastroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(painelCadastroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(txtTelefone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(jLabel12)
                         .addComponent(txtCodigoArea, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(jLabel11))
+                        .addComponent(jLabel11)
+                        .addComponent(txtTelefone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(painelCadastroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(txtObservacao, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(btnInserir)
@@ -755,12 +773,15 @@ public class FormClientes extends javax.swing.JFrame {
         tabelaTelefones.setModel(tabelaInsereTelefone);  // SETA E INICIALIZA A TABELA ABSTRATA COM AS COLUNAS E O VINCULO DA TABELA
         tabelaRelatoriosClientes.setModel(tabelaInsereRelatorios);
         Mascaras();                                     // Inicializa a função de Mascaras nos campos que utilizam informações de separação
-        txtNome.setDocument(new SoLetrasMaiusculas()); // Atribui uma classe de Letras Maiusculas para não deixar o usuario colocar letras minusculas
         txtCodigo.requestFocus();                     // Seta o ponteiro para o código do cliente
 
-        // Atribui uma classe de Numéricos para não deixar o usuario colocar nada alem de numeros neste campo;
-        txtTelefone.setDocument(new SoNumeros());
-        // ***************************************************************************************************
+        // LIMITA O NUMERO DE PALAVRAS OU INSERÇÕES QUE O USUARIO PODE PREENCHER EM CADA CAMPO
+        txtObservacao.setDocument(new DocumentoLimitado(30));
+        txtNome.setDocument(new DocumentoLimitado(60));
+        txtEndereco.setDocument(new DocumentoLimitado(60));
+        txtCidade.setDocument(new DocumentoLimitado(40));
+        txtBairro.setDocument(new DocumentoLimitado(30));
+        // ************************************************************************************
 
         txtCodigoRelatorio.setEnabled(false);
         txtNomeOuCidadeRelatorio.setEnabled(false);
@@ -773,6 +794,8 @@ public class FormClientes extends javax.swing.JFrame {
         Lista.setModel(MODELO);
         ListaClientes.setModel(MODELO2);
         // ********************************
+
+        txtCodigo.selectAll(); // Seleciona o campo todo
     }
 
     //BUSCA O ULTIMO CÓDIGO VÁLIDO NO BD E RETORNA PARA O CLIENTE
@@ -783,13 +806,17 @@ public class FormClientes extends javax.swing.JFrame {
 
         cliDao.BuscarCodigoCliente(cli);
 
+        if (cli.getClicked() == "ERROR") {
+            dispose();
+        }
+
         txtCodigo.setText(String.valueOf(cli.getCodigo()));
 
     }
 
     // MÁSCARAS DE TEXTO
     private void Mascaras() {
-        MaskFormatter maskCpf, maskCodigoArea;
+        MaskFormatter maskCpf, maskCodigoArea, maskTelefone;
 
         try {
 
@@ -799,6 +826,9 @@ public class FormClientes extends javax.swing.JFrame {
             maskCodigoArea = new MaskFormatter("(##)");
             maskCodigoArea.install(txtCodigoArea);
 
+            maskTelefone = new MaskFormatter("##########");
+            maskTelefone.install(txtTelefone);
+
         } catch (ParseException ex) {
             Logger.getLogger(FormClientes.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -807,8 +837,7 @@ public class FormClientes extends javax.swing.JFrame {
     //BOTÃO SALVAR CADASTRO DE CLIENTE
     private void btnSalvarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalvarActionPerformed
 
-        ValidarCamposObrigatorios();                // Valida os campos que são obrigatórios serem preenchidos
-
+        // Valida os campos que são obrigatórios serem preenchidos
         if (ValidarCamposObrigatorios() == true) { // se o valor de retorno voltar Verdadeiro que passou no teste ele salva as informações no BD
             SalvarCliente();
         }
@@ -853,9 +882,9 @@ public class FormClientes extends javax.swing.JFrame {
 
         if (valorNaoInformado == 0) { // verifico se passou em todos os testes com campos preenchidos
             return valida = true;
+        } else {
+            return valida = false;
         }
-
-        return valida = false;
 
     }
 
@@ -912,8 +941,7 @@ public class FormClientes extends javax.swing.JFrame {
     //BOTÃO DE INSERIR DADOS DE TELEFONE NA TEBELA DE TELEFONES
     private void btnInserirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInserirActionPerformed
 
-        ValidaDadosDeTelefones(); // Valida se os campos Código de Area e Telefone foram Preenchidos antes de inserir na tabela de telefones
-
+        // Valida se os campos Código de Area e Telefone foram Preenchidos antes de inserir na tabela de telefones
         if (ValidaDadosDeTelefones() == true) {
             InsereTelefonesNaTabela();
         } else {
@@ -964,6 +992,11 @@ public class FormClientes extends javax.swing.JFrame {
             tabelaInsereTelefone.setValueAt(txtTelefone.getText(), tabelaTelefones.getSelectedRow(), 1);
             tabelaInsereTelefone.setValueAt(txtObservacao.getText(), tabelaTelefones.getSelectedRow(), 2);
 
+            txtCodigoArea.setText("");
+            txtTelefone.setText("");
+            txtObservacao.setText("");
+            txtCodigoArea.requestFocus();
+
         } else {
             JOptionPane.showMessageDialog(null, "Não tem Telefone para ser Alterado!");
         }
@@ -977,8 +1010,10 @@ public class FormClientes extends javax.swing.JFrame {
 
             tabelaInsereTelefone.removeRow(tabelaTelefones.getSelectedRow()); //Exclui a linha que o usuário selecionou e prescionou o botão de excluir
 
+            txtCodigoArea.requestFocus();
+
         } else {
-            JOptionPane.showMessageDialog(null, "Não tem Telefone para serm Excluido!");
+            JOptionPane.showMessageDialog(null, "Não tem Telefone para ser Excluido!");
         }
 
     }//GEN-LAST:event_btnRemoverActionPerformed
@@ -1038,10 +1073,12 @@ public class FormClientes extends javax.swing.JFrame {
             cliDao.VerificaCodigoTelefone(cli);
             if (cliDao.VerificaCodigoTelefone(cli) == true) { // código do cliente já existe na tabela clientetelefones
                 //  btnInserir.setEnabled(false);
+                btnRemover.setEnabled(false);
             }
 
-            btnRemover.setEnabled(false);
             btnSalvar.setEnabled(false);
+
+            enter = 3;
 
         } else {
             JOptionPane.showMessageDialog(null, "NÃO TEM DADOS PARA PARÂMENTROS INFORMADOS NO BANCO DE DADOS!");
@@ -1058,8 +1095,7 @@ public class FormClientes extends javax.swing.JFrame {
                 + "as informações serão deletadas e não poderão ser recuperadas", "ALERTA", JOptionPane.YES_NO_OPTION);
         if (resposta == JOptionPane.YES_OPTION) {
 
-            ValidarCamposObrigatorios();                // Valida os campos que são obrigatórios serem preenchidos
-
+            // Valida os campos que são obrigatórios serem preenchidos
             if (ValidarCamposObrigatorios() == true) { // se o valor de retorno voltar Verdadeiro que passou no teste ele salva as informações no BD
                 Deletar(); // Chama o método de excluir o cliete
             }
@@ -1074,8 +1110,7 @@ public class FormClientes extends javax.swing.JFrame {
 
     private void btnAlterarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAlterarActionPerformed
 
-        ValidarCamposObrigatorios();                // Valida os campos que são obrigatórios serem preenchidos
-
+        // Valida os campos que são obrigatórios serem preenchidos
         if (ValidarCamposObrigatorios() == true) { // se o valor de retorno voltar Verdadeiro que passou no teste ele salva as informações no BD
             AlterarCliente();
         }
@@ -1110,6 +1145,7 @@ public class FormClientes extends javax.swing.JFrame {
         cmbCodigo.setSelected(false);
         cmbCidade.setSelected(false);
         cmbTodos.setSelected(false);
+        txtCodigoRelatorio.setText("");
         txtCodigoRelatorio.setEnabled(false);
         txtNomeOuCidadeRelatorio.setText("");
 
@@ -1126,6 +1162,7 @@ public class FormClientes extends javax.swing.JFrame {
         cmbCodigo.setSelected(false);
         cmbNome.setSelected(false);
         cmbTodos.setSelected(false);
+        txtCodigoRelatorio.setText("");
         txtCodigoRelatorio.setEnabled(false);
         txtNomeOuCidadeRelatorio.setText("");
         Lista.setVisible(false);
@@ -1315,7 +1352,9 @@ public class FormClientes extends javax.swing.JFrame {
         if (painelCadastro.isShowing()) {
             btnBuscar.setEnabled(true);
             btnAlterar.setEnabled(true);
-            btnSalvar.setEnabled(true);
+            if (enter != 3) { // Valida se o cliente clicou no painel para não habilitar o salvar no buscar
+                btnSalvar.setEnabled(true);
+            }
             btnExcluir.setEnabled(true);
         } else if (painelRelatorio.isShowing()) {
             btnBuscar.setEnabled(false);
@@ -1328,10 +1367,12 @@ public class FormClientes extends javax.swing.JFrame {
 
     private void txtCpfMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtCpfMousePressed
         ListaClientes.setVisible(false);
+        txtCpf.setCaretPosition(0);  
     }//GEN-LAST:event_txtCpfMousePressed
 
     private void txtCodigoMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtCodigoMousePressed
         ListaClientes.setVisible(false);
+        txtCodigo.selectAll();
     }//GEN-LAST:event_txtCodigoMousePressed
 
     private void txtNomeMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtNomeMousePressed
@@ -1341,6 +1382,24 @@ public class FormClientes extends javax.swing.JFrame {
     private void txtNomeOuCidadeRelatorioMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtNomeOuCidadeRelatorioMousePressed
         Lista.setVisible(false);
     }//GEN-LAST:event_txtNomeOuCidadeRelatorioMousePressed
+
+    private void txtTelefoneMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtTelefoneMousePressed
+        txtTelefone.setCaretPosition(0);
+    }//GEN-LAST:event_txtTelefoneMousePressed
+
+    private void txtCodigoAreaMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtCodigoAreaMousePressed
+        txtCodigoArea.setCaretPosition(0);
+    }//GEN-LAST:event_txtCodigoAreaMousePressed
+
+    private void txtCodigoAreaKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCodigoAreaKeyPressed
+        if(evt.getKeyCode() == KeyEvent.BUTTON2_DOWN_MASK ){
+        
+    }
+    }//GEN-LAST:event_txtCodigoAreaKeyPressed
+
+    private void txtCpfActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCpfActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtCpfActionPerformed
 
     //GERAR PDF DOS RELATÓRIOS DE CLIENTES
     private void GeraRelatorioPdf() {
@@ -1431,65 +1490,57 @@ public class FormClientes extends javax.swing.JFrame {
                 cliDao.SalvarTelefones(cli1);
             }
 
-        } else { // ALTERAÇÃO DE VALORES - COMPARAÇÃO DE LINHAS E COLUNAS DAS TABELAS
+        } else if (lista.size() == contTabela) { // ALTERAÇÃO DE VALORES - COMPARAÇÃO DE LINHAS E COLUNAS DAS TABELAS
 
             for (int x = 0; x < contTabela; x++) {
 
-                // DELETA AS INFORMAÇÕES DA TABELA
-                if (lista.size() > contTabela) {
+                CadastroDeClientes cli1 = new CadastroDeClientes();
 
-                    
+                cli1.setCodigo(Integer.parseInt(txtCodigo.getText()));
+                cli1.setCodigoArea(Integer.parseInt(tabelaInsereTelefone.getValueAt(x, 0).toString()));
+                cli1.setTelefone(tabelaInsereTelefone.getValueAt(x, 1).toString());
+                cli1.setObservacao(tabelaInsereTelefone.getValueAt(x, 2).toString());
 
+                int validaTabelas = 0; // VALIDA SE OS VALORES ENTRE TABELAS ESTÃO IGUAIS OU FORAM ALTERADOSl
+
+                // ANALISO A TABELA DO BD COM A TABELA DO PROGRAMA PARA VERIFICAR SE ALGUM VALOR FOI ALTERADO PARA A ATUALIZAÇÃO
+                if (tabelaInsereTelefone.getValueAt(x, 0).equals(lista.get(x).getCodigoArea())) {
+
+                    // AQUI AS INFORMAÇÕES SÃO IGUAIS ENTÃO ELE NÃO FAZ NADA
+                    // System.out.println("DDD Igual");
                 } else {
 
-                    CadastroDeClientes cli1 = new CadastroDeClientes();
-
-                    cli1.setCodigo(Integer.parseInt(txtCodigo.getText()));
-                    cli1.setCodigoArea(Integer.parseInt(tabelaInsereTelefone.getValueAt(x, 0).toString()));
-                    cli1.setTelefone(tabelaInsereTelefone.getValueAt(x, 1).toString());
-                    cli1.setObservacao(tabelaInsereTelefone.getValueAt(x, 2).toString());
-
-                    int validaTabelas = 0; // VALIDA SE OS VALORES ENTRE TABELAS ESTÃO IGUAIS OU FORAM ALTERADOSl
-
-                    // ANALISO A TABELA DO BD COM A TABELA DO PROGRAMA PARA VERIFICAR SE ALGUM VALOR FOI ALTERADO PARA A ATUALIZAÇÃO
-                    if (tabelaInsereTelefone.getValueAt(x, 0).equals(lista.get(x).getCodigoArea())) {
-
-                        // AQUI AS INFORMAÇÕES SÃO IGUAIS ENTÃO ELE NÃO FAZ NADA
-                        // System.out.println("DDD Igual");
-                    } else {
-
-                        // System.out.println("DDD foi alterado");
-                        validaTabelas = 1;
-
-                    }
-                    if (tabelaInsereTelefone.getValueAt(x, 1).toString().trim().equals(lista.get(x).getTelefone())) {
-
-                        // AQUI AS INFORMAÇÕES SÃO IGUAIS ENTÃO ELE NÃO FAZ NADA
-                        // System.out.println("TELEFONE Igual");
-                    } else {
-
-                        // System.out.println("TELEFONE foi alterado");
-                        validaTabelas = 1;
-
-                    }
-                    if (tabelaInsereTelefone.getValueAt(x, 2).toString().trim().equals(lista.get(x).getObservacao())) {
-
-                        // AQUI AS INFORMAÇÕES SÃO IGUAIS ENTÃO ELE NÃO FAZ NADA
-                        // System.out.println("observação Igual");
-                    } else {
-
-                        // System.out.println("OBSERVAÇAO foi alterado");
-                        validaTabelas = 1;
-
-                    }
-
-                    // ALTERA AS INFORMAÇÕES DA TABELA
-                    if (validaTabelas == 1) {
-                        cli1.setCodigo(lista.get(x).getCodigo()); // RECEBE O CÓDIGO DA LISTA 
-                        cliDao.AlterarTelefoneCliente(cli1);
-                    }
+                    // System.out.println("DDD foi alterado");
+                    validaTabelas = 1;
 
                 }
+                if (tabelaInsereTelefone.getValueAt(x, 1).toString().trim().equals(lista.get(x).getTelefone())) {
+
+                    // AQUI AS INFORMAÇÕES SÃO IGUAIS ENTÃO ELE NÃO FAZ NADA
+                    // System.out.println("TELEFONE Igual");
+                } else {
+
+                    // System.out.println("TELEFONE foi alterado");
+                    validaTabelas = 1;
+
+                }
+                if (tabelaInsereTelefone.getValueAt(x, 2).toString().trim().equals(lista.get(x).getObservacao())) {
+
+                    // AQUI AS INFORMAÇÕES SÃO IGUAIS ENTÃO ELE NÃO FAZ NADA
+                    // System.out.println("observação Igual");
+                } else {
+
+                    // System.out.println("OBSERVAÇAO foi alterado");
+                    validaTabelas = 1;
+
+                }
+
+                // ALTERA AS INFORMAÇÕES DA TABELA
+                if (validaTabelas == 1) {
+                    cli1.setCodigo(lista.get(x).getCodigo()); // RECEBE O CÓDIGO DA LISTA 
+                    cliDao.AlterarTelefoneCliente(cli1);
+                }
+
             }
 
         }
@@ -1522,12 +1573,16 @@ public class FormClientes extends javax.swing.JFrame {
         txtEndereco.setText("");
         txtLimiteDeCredito.setText("");
         txtNome.setText("");
-        txtObservacao.setText("");
         txtTelefone.setText("");
+        txtObservacao.setText("");
         txtValorGasto.setText("");
         comboboxSexo.setSelectedItem("Masculino");
         txtNomeOuCidadeRelatorio.setText("");
         txtCodigoRelatorio.setText("");
+
+        // Apaga a lista da tela do usuário
+        Lista.setVisible(false);
+        ListaClientes.setVisible(false);
 
         int contadorTabelaTelefone = tabelaInsereTelefone.getRowCount();
         for (int x = 0; x < contadorTabelaTelefone; x++) {
@@ -1552,6 +1607,14 @@ public class FormClientes extends javax.swing.JFrame {
 
         btnInserir.setEnabled(true);
         btnRemover.setEnabled(true);
+
+        enter = 0; // não deixa o botão liberado ao clicar na guia de clientes
+        // Se estiver na tela de cliente ele ativa o cancelar do contrario segue bloqueado
+        if (painelCadastro.isShowing()) {
+            btnSalvar.setEnabled(true);
+        }
+        txtCodigo.selectAll(); // Seleciona o campo todo
+
     }
 
     //METODO INSERIR TELEFONES NA TEBELA DE TELEFONES
@@ -1726,7 +1789,7 @@ public class FormClientes extends javax.swing.JFrame {
     private javax.swing.JTextField txtNome;
     private javax.swing.JTextField txtNomeOuCidadeRelatorio;
     private javax.swing.JTextField txtObservacao;
-    private javax.swing.JTextField txtTelefone;
+    private javax.swing.JFormattedTextField txtTelefone;
     private javax.swing.JTextField txtValorGasto;
     // End of variables declaration//GEN-END:variables
 }

@@ -89,10 +89,10 @@
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jLabel1" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace pref="15" max="32767" attributes="0"/>
+                      <Component id="jLabel1" pref="46" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -102,9 +102,6 @@
               <Properties>
                 <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
                   <Font name="Times New Roman" size="36" style="1"/>
-                </Property>
-                <Property name="foreground" type="java.awt.Color" editor="org.netbeans.beaninfo.editors.ColorEditor">
-                  <Color blue="0" green="0" red="cc" type="rgb"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value="CLIENTES"/>
               </Properties>
@@ -185,9 +182,9 @@
                                                       <Component id="txtCidade" min="-2" pref="170" max="-2" attributes="0"/>
                                                       <EmptySpace min="13" pref="13" max="-2" attributes="0"/>
                                                       <Component id="jLabel6" min="-2" max="-2" attributes="0"/>
-                                                      <EmptySpace min="4" pref="4" max="-2" attributes="0"/>
-                                                      <Component id="txtBairro" min="-2" pref="265" max="-2" attributes="0"/>
-                                                      <EmptySpace min="73" pref="73" max="-2" attributes="0"/>
+                                                      <EmptySpace max="-2" attributes="0"/>
+                                                      <Component id="txtBairro" min="-2" pref="320" max="-2" attributes="0"/>
+                                                      <EmptySpace type="separate" max="-2" attributes="0"/>
                                                       <Component id="jLabel8" min="-2" max="-2" attributes="0"/>
                                                       <EmptySpace max="-2" attributes="0"/>
                                                       <Component id="comboboxSexo" max="32767" attributes="0"/>
@@ -226,6 +223,7 @@
                                               <EmptySpace type="separate" max="-2" attributes="0"/>
                                               <Component id="btnRemover" min="-2" pref="75" max="-2" attributes="0"/>
                                           </Group>
+                                          <Component id="jScrollPane1" alignment="1" max="32767" attributes="0"/>
                                           <Group type="102" alignment="0" attributes="0">
                                               <Component id="jLabel11" min="-2" max="-2" attributes="0"/>
                                               <EmptySpace min="-2" pref="30" max="-2" attributes="0"/>
@@ -241,7 +239,6 @@
                                               <EmptySpace type="separate" max="-2" attributes="0"/>
                                               <Component id="btnInserir" max="32767" attributes="0"/>
                                           </Group>
-                                          <Component id="jScrollPane1" alignment="1" max="32767" attributes="0"/>
                                       </Group>
                                       <EmptySpace max="-2" attributes="0"/>
                                   </Group>
@@ -303,10 +300,10 @@
                               <EmptySpace pref="39" max="32767" attributes="0"/>
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Group type="103" alignment="0" groupAlignment="3" attributes="0">
-                                      <Component id="txtTelefone" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="jLabel12" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="txtCodigoArea" alignment="3" min="-2" max="-2" attributes="0"/>
                                       <Component id="jLabel11" alignment="3" min="-2" max="-2" attributes="0"/>
+                                      <Component id="txtTelefone" alignment="3" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <Group type="103" alignment="0" groupAlignment="3" attributes="0">
                                       <Component id="txtObservacao" alignment="3" min="-2" max="-2" attributes="0"/>
@@ -436,8 +433,6 @@
                         <Property name="text" type="java.lang.String" value="Telefone:"/>
                       </Properties>
                     </Component>
-                    <Component class="javax.swing.JTextField" name="txtTelefone">
-                    </Component>
                     <Component class="javax.swing.JLabel" name="jLabel13">
                       <Properties>
                         <Property name="text" type="java.lang.String" value="Observa&#xe7;&#xe3;o:"/>
@@ -509,14 +504,22 @@
                     <Component class="javax.swing.JFormattedTextField" name="txtCpf">
                       <Events>
                         <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="txtCpfMousePressed"/>
+                        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtCpfActionPerformed"/>
                       </Events>
                     </Component>
                     <Component class="javax.swing.JFormattedTextField" name="txtCodigoArea">
                       <Events>
+                        <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="txtCodigoAreaMousePressed"/>
                         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="txtCodigoAreaActionPerformed"/>
+                        <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtCodigoAreaKeyPressed"/>
                       </Events>
                     </Component>
                     <Component class="javax.swing.JTextField" name="txtCidade">
+                    </Component>
+                    <Component class="javax.swing.JFormattedTextField" name="txtTelefone">
+                      <Events>
+                        <EventHandler event="mousePressed" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="txtTelefoneMousePressed"/>
+                      </Events>
                     </Component>
                   </SubComponents>
                 </Container>

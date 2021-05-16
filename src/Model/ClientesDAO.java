@@ -66,8 +66,6 @@ public class ClientesDAO {
 
         try {
 
-            BuscarCliente(cli);
-
             if (BuscarCliente(cli)) {
                 JOptionPane.showMessageDialog(null, "CLIENTE JÁ INSERIDO NO BANCO DE DADOS");
             } else {
@@ -215,12 +213,14 @@ public class ClientesDAO {
 
             String codigoDigitado = "" + cli.getCodigo();
             String nomeDigitado = cli.getNome();
+            String cpfDigitado = cli.getCpf();
 
             while (rs.next()) {
                 String codigo = rs.getString("CodCliente");
                 String nome = rs.getString("Nome");
+                String cpf = rs.getString("Cpf");
 
-                if (nome.trim().equals(nomeDigitado) || codigo.trim().equals(codigoDigitado)) {
+                if (nome.trim().equals(nomeDigitado) || codigo.trim().equals(codigoDigitado) || cpf.trim().equals(cpfDigitado)) {
 
                     cli.setCodigo(Integer.parseInt(rs.getString("CodCliente")));
                     cli.setNome(rs.getString("Nome"));
@@ -316,6 +316,7 @@ public class ClientesDAO {
         String sexo = "b'" + cli.getSexo() + "'";
 
         try {
+            
             PreparedStatement editar = con.prepareStatement("UPDATE clientes SET Nome = ?, Endereco = ?, Cidade = ?, Bairro = ?, Cpf = ?, LimiteCredito = ?, "
                     + "ValorGastos = ?, Sexo = " + sexo + " WHERE CodCliente = ?");
 

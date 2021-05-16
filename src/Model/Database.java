@@ -5,6 +5,7 @@
  */
 package Model;
 
+import View.FormClientes;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -29,11 +30,15 @@ public class Database {
             return DriverManager.getConnection(URL, USER, PASS);
         } catch (ClassNotFoundException | SQLException ex) {
             //Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
+
             JOptionPane.showMessageDialog(null, "* ERRO DE CONEXÃO COM O BANCO DE DADOS *\n\n"
                     + "  CERTIFIQUE-SE QUE A CONEXÃO FOI INICIADA \n\n"
                     + "    FECHE A APLICAÇÃO E INICIE NOVAMENTE!");
-            throw new RuntimeException("Erro na Conexão", ex);
 
+            System.exit(0); // FINALIZA O SISTEMA PARA NÃO FICAR PRESO NO GERENCIADOR CONSUMINDO MEMÓRIA
+            
+            throw new RuntimeException("Erro na Conexão", ex);
+             
         }
 
     }
