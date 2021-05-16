@@ -12,6 +12,7 @@ import Controller.GeraPdf;
 import Model.ClientesDAO;
 import Tabelas.TableModelClientes;
 import Tabelas.TableModelClientesRelatorios;
+import com.sun.xml.internal.bind.v2.runtime.output.SAXOutput;
 import java.text.DecimalFormat;
 import java.text.ParseException;
 import java.util.List;
@@ -129,7 +130,7 @@ public class FormClientes extends javax.swing.JFrame {
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(278, 278, 278)
+                .addGap(296, 296, 296)
                 .addComponent(jLabel1)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -391,7 +392,7 @@ public class FormClientes extends javax.swing.JFrame {
                     .addGroup(painelCadastroLayout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(ListaClientes, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 28, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 39, Short.MAX_VALUE)
                 .addGroup(painelCadastroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(painelCadastroLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(txtTelefone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -429,9 +430,7 @@ public class FormClientes extends javax.swing.JFrame {
         );
         jPanel3Layout.setVerticalGroup(
             jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                .addComponent(painelCadastro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(painelCadastro, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         paineisDeAcao.addTab("CADASTRO", jPanel3);
@@ -440,6 +439,11 @@ public class FormClientes extends javax.swing.JFrame {
 
         jLabel15.setText("Nome / Cidade:");
 
+        txtNomeOuCidadeRelatorio.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mousePressed(java.awt.event.MouseEvent evt) {
+                txtNomeOuCidadeRelatorioMousePressed(evt);
+            }
+        });
         txtNomeOuCidadeRelatorio.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtNomeOuCidadeRelatorioActionPerformed(evt);
@@ -875,8 +879,12 @@ public class FormClientes extends javax.swing.JFrame {
             cli.setSexo("10"); // em binário 10 significa 2
         }
 
-        cli.setLimiteCredito(Double.parseDouble(txtLimiteDeCredito.getText().replace(',', '.')));
-        cli.setValorGasto(Double.parseDouble(txtValorGasto.getText().replace(',', '.')));
+        cli.setLimiteCredito(Double.parseDouble(txtLimiteDeCredito.getText().replace(".", "").replace(',', '.')));
+        cli.setValorGasto(Double.parseDouble(txtValorGasto.getText().replace(".", "").replace(',', '.')));
+
+        //Instancia da Modal ClientesDAO
+        ClientesDAO cliDao = new ClientesDAO();
+        cliDao.Salvar(cli);
 
         int cont = tabelaTelefones.getRowCount();
         cli.setContador(cont); // Crio um Contador para receber o valor da Tabela para validar na Classe de DAO
@@ -890,13 +898,8 @@ public class FormClientes extends javax.swing.JFrame {
             cli1.setTelefone(tabelaInsereTelefone.getValueAt(x, 1).toString());
             cli1.setObservacao(tabelaInsereTelefone.getValueAt(x, 2).toString());
 
-            ClientesDAO cliDao = new ClientesDAO();
             cliDao.SalvarTelefones(cli1);
         }
-
-        //Instancia da Modal ClientesDAO
-        ClientesDAO cliDao = new ClientesDAO();
-        cliDao.Salvar(cli);
 
         Cancelar();
     }
@@ -1030,6 +1033,16 @@ public class FormClientes extends javax.swing.JFrame {
                 tabelaInsereTelefone.addRow(cli1);
             }
 
+            // DEIXA LIBERADO O BOTÃO DE INSERIR PARA ALTERAR O TELEFONE NO CADASTRO
+            cli.setCodigo(Integer.parseInt(txtCodigo.getText()));
+            cliDao.VerificaCodigoTelefone(cli);
+            if (cliDao.VerificaCodigoTelefone(cli) == true) { // código do cliente já existe na tabela clientetelefones
+                //  btnInserir.setEnabled(false);
+            }
+
+            btnRemover.setEnabled(false);
+            btnSalvar.setEnabled(false);
+
         } else {
             JOptionPane.showMessageDialog(null, "NÃO TEM DADOS PARA PARÂMENTROS INFORMADOS NO BANCO DE DADOS!");
             Cancelar();
@@ -1053,7 +1066,6 @@ public class FormClientes extends javax.swing.JFrame {
 
         }
 
-
     }//GEN-LAST:event_btnExcluirActionPerformed
 
     private void btnInserirKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_btnInserirKeyPressed
@@ -1067,7 +1079,6 @@ public class FormClientes extends javax.swing.JFrame {
         if (ValidarCamposObrigatorios() == true) { // se o valor de retorno voltar Verdadeiro que passou no teste ele salva as informações no BD
             AlterarCliente();
         }
-
 
     }//GEN-LAST:event_btnAlterarActionPerformed
 
@@ -1083,6 +1094,7 @@ public class FormClientes extends javax.swing.JFrame {
         cmbNome.setSelected(false);
         cmbTodos.setSelected(false);
         txtNomeOuCidadeRelatorio.setEnabled(false);
+        txtNomeOuCidadeRelatorio.setText("");
         txtCodigoRelatorio.setText("");
 
     }//GEN-LAST:event_cmbCodigoMousePressed
@@ -1326,14 +1338,20 @@ public class FormClientes extends javax.swing.JFrame {
         ListaClientes.setVisible(false);
     }//GEN-LAST:event_txtNomeMousePressed
 
+    private void txtNomeOuCidadeRelatorioMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_txtNomeOuCidadeRelatorioMousePressed
+        Lista.setVisible(false);
+    }//GEN-LAST:event_txtNomeOuCidadeRelatorioMousePressed
+
     //GERAR PDF DOS RELATÓRIOS DE CLIENTES
     private void GeraRelatorioPdf() {
 
         CadastroDeClientes cli = new CadastroDeClientes();
 
         if (cmbCodigo.isSelected()) {
-            cli.setCodigo(Integer.parseInt(txtCodigoRelatorio.getText()));
-            cli.setClicked("CODIGO");
+            if (txtCodigoRelatorio.getText().length() > 0) {
+                cli.setCodigo(Integer.parseInt(txtCodigoRelatorio.getText()));
+                cli.setClicked("CODIGO");
+            }
         } else if (cmbNome.isSelected()) {
             cli.setNome(txtNomeOuCidadeRelatorio.getText());
             cli.setClicked("NOME");
@@ -1377,14 +1395,18 @@ public class FormClientes extends javax.swing.JFrame {
 
         ClientesDAO cliDao = new ClientesDAO();
         cliDao.AlterarCliente(cli);
+        List<CadastroDeClientes> lista = cliDao.BuscarTelefoneDeCliente(cli);
 
         // Altera os dados de telefone se tiver
-        int contTabela = tabelaTelefones.getRowCount();
+        int contTabela = tabelaTelefones.getRowCount(); // Crio um Contador para receber o valor da Tabela para validar na Classe de DAO
         if (contTabela > 0) {
-            List<CadastroDeClientes> lista = cliDao.BuscarTelefoneDeCliente(cli);
+            cliDao.VerificaCodigoTelefone(cli);
+        }
 
+        if (cliDao.VerificaCodigoTelefone(cli) == false) { // código do cliente NÃO existe na tabela clientetelefones ele Salva
+
+            // VALIDO QUANTAS PASSADAS NO FOR ELE TERÁ QUE DAR E INSERIR AS INFORMAÇÕES NO BD ATRAVES DA CLASSE DAO
             for (int x = 0; x < contTabela; x++) {
-
                 CadastroDeClientes cli1 = new CadastroDeClientes();
 
                 cli1.setCodigo(Integer.parseInt(txtCodigo.getText()));
@@ -1392,53 +1414,91 @@ public class FormClientes extends javax.swing.JFrame {
                 cli1.setTelefone(tabelaInsereTelefone.getValueAt(x, 1).toString());
                 cli1.setObservacao(tabelaInsereTelefone.getValueAt(x, 2).toString());
 
-                int validaTabelas = 0; // VALIDA SE OS VALORES ENTRE TABELAS ESTÃO IGUAIS OU FORAM ALTERADOSl
-
-                // ANALISO A TABELA DO BD COM A TABELA DO PROGRAMA PARA VERIFICAR SE ALGUM VALOR FOI ALTERADO PARA A ATUALIZAÇÃO
-                if (tabelaInsereTelefone.getValueAt(x, 0).equals(lista.get(x).getCodigoArea())) {
-                    
-                    // AQUI AS INFORMAÇÕES SÃO IGUAIS ENTÃO ELE NÃO FAZ NADA
-                    System.out.println("DDD Igual");
-                    
-                } else {
-
-                    System.out.println("DDD foi alterado");
-                    validaTabelas = 1;
-
-                }
-                if (tabelaInsereTelefone.getValueAt(x, 1).toString().trim().equals(lista.get(x).getTelefone())) {
-
-                    // AQUI AS INFORMAÇÕES SÃO IGUAIS ENTÃO ELE NÃO FAZ NADA
-                    System.out.println("TELEFONE Igual");
-
-                } else {
-
-                    System.out.println("TELEFONE foi alterado");
-                    validaTabelas = 1;
-                }
-                if (tabelaInsereTelefone.getValueAt(x, 2).toString().trim().equals(lista.get(x).getObservacao())) {
-
-                    // AQUI AS INFORMAÇÕES SÃO IGUAIS ENTÃO ELE NÃO FAZ NADA
-                    System.out.println("observação Igual");
-
-                } else {
-                    System.out.println("OBSERVAÇAO foi alterado");
-                    validaTabelas = 1;
-                }
-
-                if (validaTabelas == 1) {
-                    cli1.setCodigo(lista.get(x).getCodigo()); // RECEBE O CÓDIGO DA LISTA 
-                    cliDao.AlterarTelefoneCliente(cli1);
-                }
-
+                cliDao.SalvarTelefones(cli1);
             }
+
+        } else if (lista.size() < contTabela) { // SE A TABELA DO BANCO ESTIVER MENOR QUE A DO SISTEMA ELE INSERE MAIS TELEFONES NO BANCO
+
+            // VALIDO QUANTAS PASSADAS NO FOR ELE TERÁ QUE DAR E INSERIR AS INFORMAÇÕES NO BD ATRAVES DA CLASSE DAO
+            for (int x = lista.size(); x < contTabela; x++) {
+                CadastroDeClientes cli1 = new CadastroDeClientes();
+
+                cli1.setCodigo(Integer.parseInt(txtCodigo.getText()));
+                cli1.setCodigoArea(Integer.parseInt(tabelaInsereTelefone.getValueAt(x, 0).toString()));
+                cli1.setTelefone(tabelaInsereTelefone.getValueAt(x, 1).toString());
+                cli1.setObservacao(tabelaInsereTelefone.getValueAt(x, 2).toString());
+
+                cliDao.SalvarTelefones(cli1);
+            }
+
+        } else { // ALTERAÇÃO DE VALORES - COMPARAÇÃO DE LINHAS E COLUNAS DAS TABELAS
+
+            for (int x = 0; x < contTabela; x++) {
+
+                // DELETA AS INFORMAÇÕES DA TABELA
+                if (lista.size() > contTabela) {
+
+                    
+
+                } else {
+
+                    CadastroDeClientes cli1 = new CadastroDeClientes();
+
+                    cli1.setCodigo(Integer.parseInt(txtCodigo.getText()));
+                    cli1.setCodigoArea(Integer.parseInt(tabelaInsereTelefone.getValueAt(x, 0).toString()));
+                    cli1.setTelefone(tabelaInsereTelefone.getValueAt(x, 1).toString());
+                    cli1.setObservacao(tabelaInsereTelefone.getValueAt(x, 2).toString());
+
+                    int validaTabelas = 0; // VALIDA SE OS VALORES ENTRE TABELAS ESTÃO IGUAIS OU FORAM ALTERADOSl
+
+                    // ANALISO A TABELA DO BD COM A TABELA DO PROGRAMA PARA VERIFICAR SE ALGUM VALOR FOI ALTERADO PARA A ATUALIZAÇÃO
+                    if (tabelaInsereTelefone.getValueAt(x, 0).equals(lista.get(x).getCodigoArea())) {
+
+                        // AQUI AS INFORMAÇÕES SÃO IGUAIS ENTÃO ELE NÃO FAZ NADA
+                        // System.out.println("DDD Igual");
+                    } else {
+
+                        // System.out.println("DDD foi alterado");
+                        validaTabelas = 1;
+
+                    }
+                    if (tabelaInsereTelefone.getValueAt(x, 1).toString().trim().equals(lista.get(x).getTelefone())) {
+
+                        // AQUI AS INFORMAÇÕES SÃO IGUAIS ENTÃO ELE NÃO FAZ NADA
+                        // System.out.println("TELEFONE Igual");
+                    } else {
+
+                        // System.out.println("TELEFONE foi alterado");
+                        validaTabelas = 1;
+
+                    }
+                    if (tabelaInsereTelefone.getValueAt(x, 2).toString().trim().equals(lista.get(x).getObservacao())) {
+
+                        // AQUI AS INFORMAÇÕES SÃO IGUAIS ENTÃO ELE NÃO FAZ NADA
+                        // System.out.println("observação Igual");
+                    } else {
+
+                        // System.out.println("OBSERVAÇAO foi alterado");
+                        validaTabelas = 1;
+
+                    }
+
+                    // ALTERA AS INFORMAÇÕES DA TABELA
+                    if (validaTabelas == 1) {
+                        cli1.setCodigo(lista.get(x).getCodigo()); // RECEBE O CÓDIGO DA LISTA 
+                        cliDao.AlterarTelefoneCliente(cli1);
+                    }
+
+                }
+            }
+
         }
 
         Cancelar();
 
     }
-
     //EXCLUIR CLIENTES DO BD
+
     private void Deletar() {
 
         CadastroDeClientes cli = new CadastroDeClientes();
@@ -1484,10 +1544,14 @@ public class FormClientes extends javax.swing.JFrame {
         cmbCodigo.setSelected(false);
         cmbCidade.setSelected(false);
         cmbNome.setSelected(false);
+        cmbTodos.setSelected(false);
         txtNomeOuCidadeRelatorio.setEnabled(false);
         txtCodigoRelatorio.setEnabled(false);
 
         pesquisaOuRelatorio = 0;
+
+        btnInserir.setEnabled(true);
+        btnRemover.setEnabled(true);
     }
 
     //METODO INSERIR TELEFONES NA TEBELA DE TELEFONES

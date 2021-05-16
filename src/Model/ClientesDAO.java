@@ -64,34 +64,41 @@ public class ClientesDAO {
     // Salva o cliente no Banco de Dados
     public void Salvar(CadastroDeClientes cli) {
 
-        // Chama a Clase de Conexão com Banco de Dados 
-        Conexao();
-
         try {
 
-            String sexo = "b'" + cli.getSexo() + "'";
+            BuscarCliente(cli);
 
-            // Prepara os dados para serem enviado ao Banco De dados
-            PreparedStatement salvar = con.prepareStatement("INSERT INTO clientes(CodCliente,Nome,Endereco,Cidade,Bairro,Cpf,LimiteCredito,ValorGastos,Sexo) "
-                    + "VALUES (?,?,?,?,?,?,?,?," + sexo + ")");
+            if (BuscarCliente(cli)) {
+                JOptionPane.showMessageDialog(null, "CLIENTE JÁ INSERIDO NO BANCO DE DADOS");
+            } else {
 
-            // insere todos os valores conforme a sequuência de valores no VALUES do Insert
-            salvar.setString(1, "" + cli.getCodigo());
-            salvar.setString(2, cli.getNome());
-            salvar.setString(3, cli.getEndereco());
-            salvar.setString(4, cli.getCidade());
-            salvar.setString(5, cli.getBairro());
-            salvar.setString(6, cli.getCpf());
-            salvar.setString(7, "" + cli.getLimiteCredito());
-            salvar.setString(8, "" + cli.getValorGasto());
+                // Chama a Clase de Conexão com Banco de Dados 
+                Conexao();
 
-            //Insere os dados no BD
-            salvar.execute();
+                String sexo = "b'" + cli.getSexo() + "'";
 
-            JOptionPane.showMessageDialog(null, "CADASTRO DE CLIENTE SALVO COM SUCESSO!");
+                // Prepara os dados para serem enviado ao Banco De dados
+                PreparedStatement salvar = con.prepareStatement("INSERT INTO clientes(CodCliente,Nome,Endereco,Cidade,Bairro,Cpf,LimiteCredito,ValorGastos,Sexo) "
+                        + "VALUES (?,?,?,?,?,?,?,?," + sexo + ")");
 
-            //Fecha a conexão com o BD
-            con.close();
+                // Insere todos os valores conforme a sequuência de valores no VALUES do Insert
+                salvar.setString(1, "" + cli.getCodigo());
+                salvar.setString(2, cli.getNome());
+                salvar.setString(3, cli.getEndereco());
+                salvar.setString(4, cli.getCidade());
+                salvar.setString(5, cli.getBairro());
+                salvar.setString(6, cli.getCpf());
+                salvar.setString(7, "" + cli.getLimiteCredito());
+                salvar.setString(8, "" + cli.getValorGasto());
+
+                //Insere os dados no BD
+                salvar.execute();
+
+                JOptionPane.showMessageDialog(null, "CADASTRO DE CLIENTE SALVO COM SUCESSO!");
+
+                //Fecha a conexão com o BD
+                con.close();
+            }
 
         } catch (SQLException ex) {
             Logger.getLogger(ClientesDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -123,8 +130,6 @@ public class ClientesDAO {
                 codigo = "1";
             }
 
-            System.out.println(codigo);
-
             PreparedStatement salvar = con.prepareStatement("INSERT INTO clientetelefones(CodClienteTelefone,CodCliente,CodigoArea,Telefone,Observacao) VALUES(?,?,?,?,?)");
 
             for (int x = 0; x <= cli.getContador(); x++) {
@@ -147,6 +152,54 @@ public class ClientesDAO {
         }
 
     }
+
+    //VALIDAR TELEFONES NO BANCO
+    public boolean VerificaCodigoTelefone(CadastroDeClientes cli) {
+        boolean valida = false;
+
+        Conexao();
+
+        String codigoDigitado = "" + cli.getCodigo();
+        try {
+
+            PreparedStatement buscar = con.prepareStatement("SELECT * FROM clientetelefones WHERE CodCliente = " + cli.getCodigo() + "");
+
+            ResultSet rs = buscar.executeQuery();
+
+            while (rs.next()) {
+
+                String codigo = rs.getString("CodCliente");
+
+                if (codigo.trim().equals(codigoDigitado)) {
+
+                    return valida = true;
+
+                }
+
+            }
+
+        } catch (SQLException ex) {
+            Logger.getLogger(ClientesDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return valida;
+    }
+    
+    //DELETA OS TELEFONES DA LISTA E SALVA NO BANCO
+    public boolean DeletaTelefoneDaLista(CadastroDeClientes cli) {
+        boolean valida = false;
+
+        Conexao();
+
+        String codigoDigitado = "" + cli.getCodigo();
+        
+        System.out.println("Código do delete"+codigoDigitado);
+
+        
+        
+        return valida;
+    }
+    
 
     //BUSCA DO CLIENTE
     public boolean BuscarCliente(CadastroDeClientes cli) {
@@ -303,7 +356,7 @@ public class ClientesDAO {
             alterar.setString(4, "" + cli.getCodigo());
 
             alterar.execute();
-            
+
             con.close();
 
         } catch (SQLException ex) {
@@ -455,6 +508,7 @@ public class ClientesDAO {
         //BUSCA TODOS OS CLIENTES
         if (cli.getClicked() == "TODOS") {
 
+            int validaTodos = 0; // Valida se tem dados de clientes inseridos no BD
             try {
                 PreparedStatement buscar = con.prepareStatement("SELECT * FROM clientes ORDER BY CodCliente");
 
@@ -475,7 +529,11 @@ public class ClientesDAO {
                     cli2.setSexo(rs.getString("Sexo"));
 
                     lista.add(cli2);
+                    validaTodos = 1;
+                }
 
+                if (validaTodos == 0) {
+                    JOptionPane.showMessageDialog(null, "NÃO TEM CLIENTES INSERIDOS NO BANCO DE DADOS");
                 }
 
                 con.close();
